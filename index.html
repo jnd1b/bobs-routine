@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bob's Routine">
+<title>Bob's Daily Routine</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --c1:#6b6bda;--c2:#5858b8;--c3:#4ab8d8;--c4:#5abf8a;
+  --c1l:#9090f0;--c3l:#9de5fb;--c4l:#d4fbe8;
+  --bg:#1a1a2e;--card:#22223a;--border:#2e2e50;--text:#d0d0f0;--muted:#6060a0
+}
+html,body{min-height:100%;background:var(--bg)}
+body{font-family:'Inter',sans-serif;padding:16px;max-width:720px;margin:0 auto;padding-bottom:40px}
+
+/* ── SYNC INDICATOR ── */
+.sync-bar{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;background:var(--card);border:1px solid var(--border);margin-bottom:12px;font-size:12px;font-weight:600;color:var(--muted);transition:all 0.3s}
+.sync-bar.syncing{border-color:var(--c3);color:var(--c3l)}
+.sync-bar.synced{border-color:var(--c4);color:var(--c4l)}
+.sync-bar.error{border-color:#c04040;color:#ff8080}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background 0.3s}
+.sync-bar.syncing .sync-dot{background:var(--c3);animation:pulse 1s infinite}
+.sync-bar.synced .sync-dot{background:var(--c4)}
+.sync-bar.error .sync-dot{background:#c04040}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* ── TAB NAV ── */
+.tab-nav{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn{flex-shrink:0;padding:8px 16px;border-radius:10px;border:1px solid var(--border);background:var(--card);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.tab-btn:hover{color:var(--text);border-color:#3a3a60}
+.tab-btn.active{background:var(--c2);border-color:var(--c1l);color:#fff}
+.tab-btn.add-tab-btn{background:transparent;border-style:dashed;color:var(--muted)}
+.tab-btn.add-tab-btn:hover{color:var(--c1l);border-color:var(--c1l)}
+
+/* ── PAGES ── */
+.page{display:none}
+.page.active{display:block}
+
+/* ── HEADER ── */
+.header{padding:20px 20px 16px;border-radius:16px;background:#16163a;margin-bottom:14px;position:relative;overflow:hidden;border:1px solid var(--border)}
+.header::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:var(--c2);opacity:0.25}
+.header::after{content:'';position:absolute;bottom:-20px;right:60px;width:70px;height:70px;border-radius:50%;background:var(--c3);opacity:0.15}
+.header-inner{position:relative;z-index:1}
+.header-inner h1{font-size:20px;font-weight:800;color:#e8e8ff;letter-spacing:-0.3px}
+.header-inner h1 span{color:var(--c1l);text-decoration:underline;text-underline-offset:3px}
+.date{font-size:12px;color:var(--muted);margin-top:3px;font-weight:500;text-transform:uppercase;letter-spacing:0.8px}
+.progress-wrap{margin-top:14px}
+.progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.progress-label{font-size:12px;color:var(--muted);font-weight:600}
+.progress-pct{font-size:13px;color:var(--c1l);font-weight:700}
+.progress-track{background:var(--border);border-radius:4px;height:6px;overflow:hidden}
+.progress-bar{height:100%;border-radius:4px;background:var(--c1l);transition:width 0.35s ease}
+.reset-btn{margin-top:10px;width:100%;padding:8px;border-radius:8px;border:1px solid var(--border);background:transparent;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;text-transform:uppercase;letter-spacing:0.8px;transition:all 0.15s}
+.reset-btn:hover{background:var(--border);color:var(--text)}
+
+/* ── ROUTINE SECTIONS ── */
+.section{margin-bottom:14px}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:0 2px}
+.section-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.morning .section-icon{background:#2a2a50}
+.afternoon .section-icon{background:#1a2e38}
+.evening .section-icon{background:#1a2e24}
+.section-header h2{font-size:13px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase}
+.morning .section-header h2{color:var(--c1l)}
+.afternoon .section-header h2{color:var(--c3l)}
+.evening .section-header h2{color:var(--c4l)}
+.section-count{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:auto}
+.morning .section-count{background:#2a2a50;color:var(--c1l)}
+.afternoon .section-count{background:#1a2e38;color:var(--c3l)}
+.evening .section-count{background:#1a2e24;color:var(--c4l)}
+
+/* ── TASKS ── */
+.task-list{display:flex;flex-direction:column;gap:6px}
+.task{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;cursor:pointer;user-select:none;background:var(--card);border:1px solid var(--border);transition:transform 0.1s,background 0.15s}
+.task:hover{background:#28284a;border-color:#3a3a60}
+.task:active{transform:scale(0.97)}
+.task.done{opacity:0.4}
+.task.done .task-text{text-decoration:line-through}
+.checkbox{width:20px;height:20px;border-radius:5px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;background:transparent}
+.task.done .checkbox{border-color:transparent}
+.morning .task.done .checkbox{background:var(--c1)}
+.afternoon .task.done .checkbox{background:var(--c3)}
+.evening .task.done .checkbox{background:var(--c4)}
+.custom-task.done .checkbox{background:var(--c1l)}
+.check-icon{font-size:11px;color:#fff;font-weight:900;display:none}
+.task.done .check-icon{display:block}
+.task-icon{font-size:16px;width:20px;text-align:center}
+.task-text{font-size:14px;font-weight:500;color:var(--text);flex:1}
+.task.done .task-text{color:var(--muted)}
+.delete-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;padding:0 0 0 6px;line-height:1;opacity:0;transition:opacity 0.15s}
+.task:hover .delete-btn{opacity:1}
+
+/* ── ADD ROW ── */
+.add-row{display:flex;gap:8px;margin-top:8px}
+.add-input{flex:1;padding:9px 12px;border-radius:8px;border:1px solid var(--border);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--text);background:var(--card);outline:none}
+.add-input::placeholder{color:var(--muted)}
+.add-input:focus{border-color:var(--c1l);background:#28284a}
+.add-btn{padding:9px 14px;border-radius:8px;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity 0.15s;color:#fff;background:var(--c2)}
+.add-btn:hover{opacity:0.85}
+.morning .add-btn{background:var(--c2)}
+.afternoon .add-btn{background:var(--c3)}
+.evening .add-btn{background:var(--c4)}
+
+/* ── CUSTOM TAB PAGE ── */
+.custom-page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.custom-page-title{font-size:18px;font-weight:800;color:#e8e8ff}
+.custom-page-title .tab-icon{margin-right:8px}
+.delete-tab-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.15s}
+.delete-tab-btn:hover{border-color:#c04040;color:#c04040}
+.custom-progress-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.custom-progress-track{flex:1;background:var(--border);border-radius:4px;height:6px;overflow:hidden}
+.custom-progress-bar{height:100%;border-radius:4px;background:var(--c1l);transition:width 0.35s ease}
+.custom-progress-pct{font-size:13px;color:var(--c1l);font-weight:700;min-width:36px;text-align:right}
+.custom-reset-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.15s}
+.custom-reset-btn:hover{background:var(--border);color:var(--text)}
+
+/* ── WEEKLY TRACKER ── */
+.wt-header{margin-bottom:20px}
+.wt-header h1{font-size:20px;font-weight:800;color:#e8e8ff;margin-bottom:4px}
+.wt-header p{font-size:13px;color:var(--muted);font-weight:500}
+.wt-snapshot{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.wt-stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px;text-align:center}
+.wt-stat .val{font-size:22px;font-weight:800;color:var(--c1l)}
+.wt-stat .lbl{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.6px;margin-top:4px}
+.wt-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}
+.wt-section-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:14px}
+.wt-chart{display:flex;align-items:flex-end;gap:8px;height:120px}
+.wt-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%}
+.wt-bar-outer{flex:1;width:100%;background:var(--border);border-radius:6px;display:flex;align-items:flex-end;overflow:hidden}
+.wt-bar-inner{width:100%;border-radius:6px;transition:height 0.4s ease;min-height:0}
+.wt-bar-day{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase}
+.wt-bar-pct{font-size:11px;font-weight:700;color:var(--c1l)}
+.wt-tabs-grid{display:flex;flex-direction:column;gap:8px}
+.wt-tab-row{display:flex;align-items:center;gap:10px}
+.wt-tab-label{font-size:13px;font-weight:600;color:var(--text);min-width:90px;display:flex;align-items:center;gap:6px}
+.wt-tab-bars{flex:1;display:flex;gap:4px}
+.wt-tab-dot{flex:1;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;transition:all 0.2s}
+.wt-tab-pct{font-size:12px;font-weight:700;color:var(--muted);min-width:34px;text-align:right}
+.wt-clear-btn{width:100%;margin-top:8px;padding:8px;border-radius:10px;border:1px solid var(--border);background:transparent;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:0.6px}
+.wt-clear-btn:hover{border-color:#c04040;color:#c04040}
+
+/* ── DAILY LOG SECTION ── */
+.dl-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}
+.dl-section-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:12px}
+.dl-mood-row{display:flex;gap:8px;margin-bottom:14px}
+.dl-mood-btn{flex:1;padding:10px 4px;border-radius:10px;border:1px solid var(--border);background:transparent;font-size:20px;cursor:pointer;transition:all 0.15s;text-align:center}
+.dl-mood-btn:hover{border-color:var(--c1l);background:#28284a}
+.dl-mood-btn.selected{border-color:var(--c1l);background:#2a2a50;box-shadow:0 0 0 2px var(--c1l)}
+.dl-mood-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-top:3px}
+.dl-notes-input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--text);background:#1a1a2e;outline:none;resize:vertical;min-height:70px}
+.dl-notes-input::placeholder{color:var(--muted)}
+.dl-notes-input:focus{border-color:var(--c1l)}
+.dl-notes-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;display:block}
+.dl-save-btn{width:100%;margin-top:10px;padding:10px;border-radius:10px;border:none;background:var(--c2);font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:#fff;cursor:pointer;transition:opacity 0.15s;text-transform:uppercase;letter-spacing:0.6px}
+.dl-save-btn:hover{opacity:0.85}
+.dl-saved-badge{display:inline-block;margin-left:8px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:#1a2e24;color:var(--c4);border:1px solid var(--c4);vertical-align:middle;opacity:0;transition:opacity 0.3s}
+.dl-saved-badge.show{opacity:1}
+
+/* ── LOG HISTORY ── */
+.log-history{display:flex;flex-direction:column;gap:8px}
+.log-entry{background:#1a1a2e;border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.log-entry-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.log-entry-date{font-size:12px;font-weight:700;color:var(--text)}
+.log-entry-mood{font-size:16px}
+.log-entry-pct{margin-left:auto;font-size:13px;font-weight:700;color:var(--c1l)}
+.log-entry-note{font-size:12px;color:var(--muted);font-weight:500;line-height:1.5}
+.log-entry-mini-bars{display:flex;gap:4px;margin-top:8px}
+.log-mini-bar{height:4px;flex:1;border-radius:2px}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#1e1e3a;border:1px solid var(--border);border-radius:16px;padding:24px;width:320px;max-width:90vw}
+.modal h3{font-size:16px;font-weight:700;color:#e8e8ff;margin-bottom:16px}
+.modal label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px}
+.modal input{width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);font-family:'Inter',sans-serif;font-size:14px;font-weight:500;color:var(--text);background:var(--card);outline:none;margin-bottom:14px}
+.modal input:focus{border-color:var(--c1l)}
+.emoji-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.emoji-opt{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.emoji-opt:hover,.emoji-opt.selected{border-color:var(--c1l);background:#2a2a50}
+.modal-btns{display:flex;gap:8px}
+.modal-cancel{flex:1;padding:9px;border-radius:8px;border:1px solid var(--border);background:transparent;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
+.modal-confirm{flex:1;padding:9px;border-radius:8px;border:none;background:var(--c2);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#fff;cursor:pointer}
+.footer{text-align:center;font-size:11px;color:var(--muted);margin-top:16px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px}
+</style>
+</head>
+<body>
+
+<!-- SYNC BAR -->
+<div class="sync-bar" id="syncBar">
+  <div class="sync-dot" id="syncDot"></div>
+  <span id="syncText">Connecting to cloud…</span>
+</div>
+
+<!-- TAB NAV -->
+<nav class="tab-nav" id="tabNav">
+  <button class="tab-btn" data-tab="routine" id="btn-routine">📋 Routine</button>
+  <button class="tab-btn" data-tab="weekly" id="btn-weekly">📊 Weekly</button>
+  <button class="tab-btn add-tab-btn" id="addTabBtn">+ New Tab</button>
+</nav>
+
+<!-- ROUTINE PAGE -->
+<div class="page" id="page-routine">
+  <div class="header">
+    <div class="header-inner">
+      <h1><span>Bob</span>'s Daily Routine</h1>
+      <div class="date" id="dateLabel"></div>
+      <div class="progress-wrap">
+        <div class="progress-row">
+          <span class="progress-label">Progress</span>
+          <span class="progress-pct" id="progressPct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar" id="progressBar" style="width:0%"></div>
+        </div>
+      </div>
+      <button class="reset-btn" onclick="resetRoutine()">↺ Reset for today</button>
+    </div>
+  </div>
+  <div class="section morning">
+    <div class="section-header">
+      <div class="section-icon">🌅</div>
+      <h2>Morning</h2>
+      <span class="section-count" id="count-morning">0/0</span>
+    </div>
+    <div class="task-list" id="list-morning"></div>
+    <div class="add-row">
+      <input class="add-input" id="input-morning" placeholder="Add morning task…" />
+      <button class="add-btn morning" onclick="addRoutineTask('morning')">+ Add</button>
+    </div>
+  </div>
+  <div class="section afternoon">
+    <div class="section-header">
+      <div class="section-icon">⚡</div>
+      <h2>Afternoon</h2>
+      <span class="section-count" id="count-afternoon">0/0</span>
+    </div>
+    <div class="task-list" id="list-afternoon"></div>
+    <div class="add-row">
+      <input class="add-input" id="input-afternoon" placeholder="Add afternoon task…" />
+      <button class="add-btn afternoon" onclick="addRoutineTask('afternoon')">+ Add</button>
+    </div>
+  </div>
+  <div class="section evening">
+    <div class="section-header">
+      <div class="section-icon">🌙</div>
+      <h2>Evening</h2>
+      <span class="section-count" id="count-evening">0/0</span>
+    </div>
+    <div class="task-list" id="list-evening"></div>
+    <div class="add-row">
+      <input class="add-input" id="input-evening" placeholder="Add evening task…" />
+      <button class="add-btn evening" onclick="addRoutineTask('evening')">+ Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- WEEKLY PAGE -->
+<div class="page" id="page-weekly">
+  <div class="wt-header">
+    <h1>📊 Weekly Tracker</h1>
+    <p id="wt-week-label"></p>
+  </div>
+  <div class="wt-snapshot">
+    <div class="wt-stat"><div class="val" id="wt-avg">—</div><div class="lbl">Avg / day</div></div>
+    <div class="wt-stat"><div class="val" id="wt-best">—</div><div class="lbl">Best day</div></div>
+    <div class="wt-stat"><div class="val" id="wt-streak">0</div><div class="lbl">Streak 🔥</div></div>
+  </div>
+  <div class="wt-section">
+    <div class="wt-section-title">Overall completion this week</div>
+    <div class="wt-chart" id="wt-chart"></div>
+  </div>
+  <div class="wt-section">
+    <div class="wt-section-title">Tab breakdown — today</div>
+    <div class="wt-tabs-grid" id="wt-tabs-grid"></div>
+  </div>
+  <div class="dl-section">
+    <div class="dl-section-title">Today's Daily Log <span class="dl-saved-badge" id="dl-saved-badge">✓ Saved</span></div>
+    <div class="dl-mood-row" id="dl-mood-row">
+      <button class="dl-mood-btn" data-mood="terrible" onclick="selectMood('terrible')"><span>😣</span><span class="dl-mood-label">Rough</span></button>
+      <button class="dl-mood-btn" data-mood="meh" onclick="selectMood('meh')"><span>😐</span><span class="dl-mood-label">Meh</span></button>
+      <button class="dl-mood-btn" data-mood="okay" onclick="selectMood('okay')"><span>🙂</span><span class="dl-mood-label">Okay</span></button>
+      <button class="dl-mood-btn" data-mood="good" onclick="selectMood('good')"><span>😄</span><span class="dl-mood-label">Good</span></button>
+      <button class="dl-mood-btn" data-mood="great" onclick="selectMood('great')"><span>🔥</span><span class="dl-mood-label">Fired up</span></button>
+    </div>
+    <label class="dl-notes-label">Notes / Reflection</label>
+    <textarea class="dl-notes-input" id="dl-notes" placeholder="What went well? What to improve tomorrow?"></textarea>
+    <button class="dl-save-btn" onclick="saveLog()">⬇ Save today's log</button>
+  </div>
+  <div class="wt-section">
+    <div class="wt-section-title">Log History</div>
+    <div class="log-history" id="log-history"></div>
+    <button class="wt-clear-btn" onclick="clearWeeklyLog()" style="margin-top:12px">Clear all weekly data</button>
+  </div>
+</div>
+
+<!-- CUSTOM PAGES container -->
+<div id="customPagesContainer"></div>
+
+<!-- NEW TAB MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3>New Tab</h3>
+    <label>Tab name</label>
+    <input id="modalName" placeholder="e.g. Gym, Work, Study…" maxlength="24" />
+    <label>Icon</label>
+    <div class="emoji-grid" id="emojiGrid"></div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-confirm" onclick="confirmNewTab()">Create</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer">Tap a task to check it off · hover to delete · ☁️ synced via Firebase</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, getDocs, deleteDoc }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* ══════════════════════════════════════════
+   FIREBASE CONFIG
+══════════════════════════════════════════ */
+const firebaseConfig = {
+  apiKey: "AIzaSyCK0gutURx7HJEz4KwSNQJg_ESxX4pmY30",
+  authDomain: "routine-tracker-e684a.firebaseapp.com",
+  projectId: "routine-tracker-e684a",
+  storageBucket: "routine-tracker-e684a.firebasestorage.app",
+  messagingSenderId: "320186684614",
+  appId: "1:320186684614:web:8a90ef741437ea1d69b3c7"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+/* ── Firestore document refs (all data under user "bob") ── */
+const USER = 'bob';
+const routineRef    = doc(db, 'users', USER, 'data', 'routine');
+const customTabsRef = doc(db, 'users', USER, 'data', 'customTabs');
+const weeklyLogRef  = doc(db, 'users', USER, 'data', 'weeklyLog');
+
+/* ══════════════════════════════════════════
+   CONSTANTS & STATE
+══════════════════════════════════════════ */
+const EMOJIS     = ['💪','💼','📚','🏃','🎯','🧘','🏋️','🎮','🎨','🎸','🍳','🧹','💊','🚴','🧠','✍️','🌿','💰','📸','🛠️'];
+const DAY_NAMES  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS     = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const FULL_DAYS  = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MOOD_EMOJI = { terrible:'😣', meh:'😐', okay:'🙂', good:'😄', great:'🔥' };
+
+const ROUTINE_DEFAULTS = {
+  morning:[
+    {id:'m1',text:'Wake up & hydrate',icon:'💧'},
+    {id:'m2',text:'Work out / stretch',icon:'💪'},
+    {id:'m3',text:'Cold shower',icon:'🚿'},
+    {id:'m4',text:'Breakfast',icon:'🍳'},
+    {id:'m5',text:'Plan the day',icon:'📋'},
+  ],
+  afternoon:[
+    {id:'a1',text:'Deep work session',icon:'🎯'},
+    {id:'a2',text:'Lunch',icon:'🥩'},
+    {id:'a3',text:'Review tasks / emails',icon:'📬'},
+    {id:'a4',text:'Short walk',icon:'🚶'},
+  ],
+  evening:[
+    {id:'e1',text:'Wrap up work',icon:'✅'},
+    {id:'e2',text:'Dinner',icon:'🍽️'},
+    {id:'e3',text:'Read / learn something',icon:'📖'},
+    {id:'e4',text:'Prep for tomorrow',icon:'🗒️'},
+    {id:'e5',text:'Lights out',icon:'😴'},
+  ]
+};
+
+let nextId      = 200;
+let routineData = {};
+let customTabs  = [];
+let weeklyLog   = {};
+let activeTab   = 'routine';
+let selectedEmoji = EMOJIS[0];
+let selectedMood  = null;
+let isSaving    = false;
+
+/* ══════════════════════════════════════════
+   SYNC UI
+══════════════════════════════════════════ */
+function setSyncState(state, text) {
+  const bar = document.getElementById('syncBar');
+  bar.className = 'sync-bar ' + state;
+  document.getElementById('syncText').textContent = text;
+}
+
+/* ══════════════════════════════════════════
+   DATE HELPERS
+══════════════════════════════════════════ */
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function getWeekKeys() {
+  const today = new Date(), dow = today.getDay(), keys = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - dow + i);
+    keys.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));
+  }
+  return keys;
+}
+function formatDateKey(key) {
+  const [y,m,d] = key.split('-');
+  const dt = new Date(+y, +m-1, +d);
+  return FULL_DAYS[dt.getDay()]+', '+MONTHS[dt.getMonth()]+' '+dt.getDate();
+}
+
+/* ══════════════════════════════════════════
+   FIREBASE SAVE / LOAD
+══════════════════════════════════════════ */
+async function saveRoutine() {
+  setSyncState('syncing','Saving…');
+  try {
+    await setDoc(routineRef, { data: routineData });
+    setSyncState('synced','All changes saved ☁️');
+  } catch(e) { setSyncState('error','Save failed — check connection'); }
+}
+async function saveCustom() {
+  setSyncState('syncing','Saving…');
+  try {
+    await setDoc(customTabsRef, { data: customTabs });
+    setSyncState('synced','All changes saved ☁️');
+  } catch(e) { setSyncState('error','Save failed — check connection'); }
+}
+async function saveWeekly() {
+  setSyncState('syncing','Saving…');
+  try {
+    await setDoc(weeklyLogRef, { data: weeklyLog });
+    setSyncState('synced','All changes saved ☁️');
+  } catch(e) { setSyncState('error','Save failed — check connection'); }
+}
+
+async function loadAll() {
+  setSyncState('syncing','Loading from cloud…');
+  try {
+    const [rSnap, cSnap, wSnap] = await Promise.all([
+      getDoc(routineRef),
+      getDoc(customTabsRef),
+      getDoc(weeklyLogRef)
+    ]);
+    routineData = rSnap.exists() ? rSnap.data().data : {
+      morning:  ROUTINE_DEFAULTS.morning.map(t=>({...t,done:false})),
+      afternoon:ROUTINE_DEFAULTS.afternoon.map(t=>({...t,done:false})),
+      evening:  ROUTINE_DEFAULTS.evening.map(t=>({...t,done:false})),
+    };
+    customTabs = cSnap.exists() ? cSnap.data().data : [
+      {id:'gym',  name:'Gym',  icon:'💪', tasks:[
+        {id:'g1',text:'Warm up (10 min)',done:false},
+        {id:'g2',text:'Main workout',done:false},
+        {id:'g3',text:'Cool down & stretch',done:false},
+        {id:'g4',text:'Protein shake',done:false},
+      ]},
+      {id:'work', name:'Work', icon:'💼', tasks:[
+        {id:'w1',text:'Check emails & Slack',done:false},
+        {id:'w2',text:'Team standup',done:false},
+        {id:'w3',text:'Focus block (2 hrs)',done:false},
+        {id:'w4',text:'Review deliverables',done:false},
+        {id:'w5',text:'EOD update / wrap',done:false},
+      ]},
+    ];
+    weeklyLog = wSnap.exists() ? wSnap.data().data : {};
+    setSyncState('synced','Synced ☁️');
+  } catch(e) {
+    setSyncState('error','Could not reach cloud — showing offline data');
+  }
+}
+
+/* ── Real-time listener: updates UI if another device saves ── */
+function startRealtimeSync() {
+  onSnapshot(routineRef, snap => {
+    if (!snap.exists() || isSaving) return;
+    const incoming = snap.data().data;
+    routineData = incoming;
+    renderRoutine();
+    setSyncState('synced','Synced from another device ☁️');
+  });
+  onSnapshot(customTabsRef, snap => {
+    if (!snap.exists() || isSaving) return;
+    customTabs = snap.data().data;
+    rebuild();
+    switchTab(activeTab);
+    setSyncState('synced','Synced from another device ☁️');
+  });
+  onSnapshot(weeklyLogRef, snap => {
+    if (!snap.exists() || isSaving) return;
+    weeklyLog = snap.data().data;
+    if (activeTab === 'weekly') renderWeekly();
+    setSyncState('synced','Synced from another device ☁️');
+  });
+}
+
+/* ══════════════════════════════════════════
+   SCORES
+══════════════════════════════════════════ */
+function routineScore() {
+  const all = [...routineData.morning,...routineData.afternoon,...routineData.evening];
+  return all.length ? Math.round(all.filter(t=>t.done).length/all.length*100) : 0;
+}
+function customScore(tabId) {
+  const tab = customTabs.find(t=>t.id===tabId);
+  return (!tab||!tab.tasks.length) ? 0 : Math.round(tab.tasks.filter(t=>t.done).length/tab.tasks.length*100);
+}
+function overallScore() {
+  const scores = [routineScore(),...customTabs.map(t=>customScore(t.id))];
+  return scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
+}
+
+/* ══════════════════════════════════════════
+   MOOD
+══════════════════════════════════════════ */
+function selectMood(mood) {
+  selectedMood = mood;
+  document.querySelectorAll('.dl-mood-btn').forEach(b => b.classList.toggle('selected', b.dataset.mood===mood));
+}
+
+/* ══════════════════════════════════════════
+   WEEKLY LOG
+══════════════════════════════════════════ */
+async function saveLog() {
+  const key = todayKey();
+  const tabScores = { routine: routineScore() };
+  customTabs.forEach(t => { tabScores[t.id] = customScore(t.id); });
+  weeklyLog[key] = { overall:overallScore(), tabs:tabScores, mood:selectedMood, notes:document.getElementById('dl-notes').value.trim() };
+  await saveWeekly();
+  renderWeekly();
+  const badge = document.getElementById('dl-saved-badge');
+  badge.classList.add('show');
+  setTimeout(()=>badge.classList.remove('show'), 2500);
+}
+
+async function clearWeeklyLog() {
+  if (!confirm('Clear all weekly data?')) return;
+  weeklyLog = {};
+  await saveWeekly();
+  renderWeekly();
+}
+
+/* ══════════════════════════════════════════
+   RENDER WEEKLY
+══════════════════════════════════════════ */
+function barColor(pct) {
+  if (pct>=80) return '#5abf8a';
+  if (pct>=50) return '#9090f0';
+  if (pct>=20) return '#4ab8d8';
+  return '#2e2e50';
+}
+
+function renderWeekly() {
+  const weekKeys = getWeekKeys();
+  const today = new Date(), todayDow = today.getDay();
+  const first = new Date(today); first.setDate(today.getDate()-todayDow);
+  const last  = new Date(today); last.setDate(today.getDate()-todayDow+6);
+  document.getElementById('wt-week-label').textContent =
+    MONTHS[first.getMonth()]+' '+first.getDate()+' – '+MONTHS[last.getMonth()]+' '+last.getDate()+', '+last.getFullYear();
+
+  // bar chart
+  const chart = document.getElementById('wt-chart');
+  chart.innerHTML='';
+  const weekScores = weekKeys.map(k => weeklyLog[k] ? weeklyLog[k].overall : null);
+  weekKeys.forEach((k,i)=>{
+    const pct=weekScores[i], isToday=(i===todayDow);
+    const wrap=document.createElement('div'); wrap.className='wt-bar-wrap';
+    const pctLbl=document.createElement('div'); pctLbl.className='wt-bar-pct';
+    pctLbl.style.color=isToday?'#e8e8ff':'var(--muted)';
+    pctLbl.textContent=pct!==null?pct+'%':'';
+    const outer=document.createElement('div'); outer.className='wt-bar-outer';
+    const inner=document.createElement('div'); inner.className='wt-bar-inner';
+    inner.style.height=(pct!==null?pct:0)+'%';
+    inner.style.background=pct!==null?barColor(pct):'transparent';
+    if(isToday){outer.style.border='1px solid var(--c1l)';outer.style.borderRadius='6px';}
+    outer.appendChild(inner);
+    const dayLbl=document.createElement('div'); dayLbl.className='wt-bar-day';
+    dayLbl.style.color=isToday?'var(--c1l)':'var(--muted)';
+    dayLbl.textContent=DAY_NAMES[i];
+    wrap.appendChild(pctLbl); wrap.appendChild(outer); wrap.appendChild(dayLbl);
+    chart.appendChild(wrap);
+  });
+
+  // stats
+  const logged=weekScores.filter(s=>s!==null);
+  const avg=logged.length?Math.round(logged.reduce((a,b)=>a+b,0)/logged.length):null;
+  const best=logged.length?Math.max(...logged):null;
+  document.getElementById('wt-avg').textContent=avg!==null?avg+'%':'—';
+  document.getElementById('wt-best').textContent=best!==null?best+'%':'—';
+  let streak=0;
+  for(let i=todayDow;i>=0;i--){
+    if(weekScores[i]!==null&&weekScores[i]>=50)streak++; else break;
+  }
+  document.getElementById('wt-streak').textContent=streak>0?streak+'🔥':'0';
+
+  // tab breakdown
+  const grid=document.getElementById('wt-tabs-grid'); grid.innerHTML='';
+  const allTabDefs=[{id:'routine',name:'Routine',icon:'📋'},...customTabs.map(t=>({id:t.id,name:t.name,icon:t.icon}))];
+  allTabDefs.forEach(tab=>{
+    const row=document.createElement('div'); row.className='wt-tab-row';
+    const lbl=document.createElement('div'); lbl.className='wt-tab-label'; lbl.textContent=tab.icon+' '+tab.name;
+    const barsWrap=document.createElement('div'); barsWrap.className='wt-tab-bars';
+    weekKeys.forEach((k,i)=>{
+      const entry=weeklyLog[k];
+      const pct=entry&&entry.tabs&&entry.tabs[tab.id]!=null?entry.tabs[tab.id]:null;
+      const dot=document.createElement('div'); dot.className='wt-tab-dot';
+      dot.style.background=pct!==null?barColor(pct):'var(--border)';
+      dot.style.color=pct!==null?'#fff':'var(--muted)';
+      dot.textContent=pct!==null?pct+'%':(i===todayDow?'·':'');
+      if(i===todayDow) dot.style.outline='1px solid var(--c1l)';
+      barsWrap.appendChild(dot);
+    });
+    const pctNow=tab.id==='routine'?routineScore():customScore(tab.id);
+    const pctEl=document.createElement('div'); pctEl.className='wt-tab-pct'; pctEl.textContent=pctNow+'%';
+    row.appendChild(lbl); row.appendChild(barsWrap); row.appendChild(pctEl);
+    grid.appendChild(row);
+  });
+
+  // restore today mood/notes
+  const todayEntry=weeklyLog[todayKey()];
+  if(todayEntry){
+    if(todayEntry.mood) selectMood(todayEntry.mood);
+    if(todayEntry.notes) document.getElementById('dl-notes').value=todayEntry.notes;
+  } else {
+    selectedMood=null;
+    document.querySelectorAll('.dl-mood-btn').forEach(b=>b.classList.remove('selected'));
+    document.getElementById('dl-notes').value='';
+  }
+
+  // log history
+  const histEl=document.getElementById('log-history'); histEl.innerHTML='';
+  const sortedKeys=Object.keys(weeklyLog).sort((a,b)=>b.localeCompare(a));
+  if(!sortedKeys.length){
+    histEl.innerHTML='<div style="font-size:13px;color:var(--muted);text-align:center;padding:12px">No logs yet. Save today\'s progress to get started!</div>';
+  } else {
+    sortedKeys.slice(0,14).forEach(k=>{
+      const entry=weeklyLog[k];
+      const div=document.createElement('div'); div.className='log-entry';
+      const moodEmoji=entry.mood?MOOD_EMOJI[entry.mood]:'📅';
+      const tabBarsHTML=allTabDefs.map(tab=>{
+        const pct=entry.tabs&&entry.tabs[tab.id]!=null?entry.tabs[tab.id]:0;
+        return `<div class="log-mini-bar" style="background:${barColor(pct)};opacity:0.8" title="${tab.name}: ${pct}%"></div>`;
+      }).join('');
+      div.innerHTML=`
+        <div class="log-entry-top">
+          <span class="log-entry-mood">${moodEmoji}</span>
+          <span class="log-entry-date">${formatDateKey(k)}</span>
+          <span class="log-entry-pct">${entry.overall}%</span>
+        </div>
+        ${entry.notes?`<div class="log-entry-note">${entry.notes}</div>`:''}
+        <div class="log-entry-mini-bars">${tabBarsHTML}</div>`;
+      histEl.appendChild(div);
+    });
+  }
+}
+
+/* ══════════════════════════════════════════
+   TAB SWITCHING
+══════════════════════════════════════════ */
+function switchTab(id) {
+  activeTab=id;
+  document.querySelectorAll('.tab-btn:not(.add-tab-btn)').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+id));
+  if(id==='weekly') renderWeekly();
+}
+
+function buildTabNav() {
+  const nav=document.getElementById('tabNav'), addBtn=document.getElementById('addTabBtn');
+  nav.querySelectorAll('[data-custom]').forEach(b=>b.remove());
+  customTabs.forEach(tab=>{
+    const btn=document.createElement('button');
+    btn.className='tab-btn'; btn.dataset.tab=tab.id; btn.dataset.custom='1';
+    btn.textContent=tab.icon+' '+tab.name;
+    btn.addEventListener('click',()=>switchTab(tab.id));
+    nav.insertBefore(btn,addBtn);
+  });
+}
+
+function buildCustomPages() {
+  const container=document.getElementById('customPagesContainer'); container.innerHTML='';
+  customTabs.forEach(tab=>{
+    const page=document.createElement('div');
+    page.className='page'; page.id='page-'+tab.id; page.dataset.custom='1';
+    page.innerHTML=`
+      <div class="custom-page-header">
+        <div class="custom-page-title"><span class="tab-icon">${tab.icon}</span>${tab.name}</div>
+        <div style="display:flex;gap:8px">
+          <button class="custom-reset-btn" onclick="window._resetCustomTab('${tab.id}')">↺ Reset</button>
+          <button class="delete-tab-btn" onclick="window._deleteCustomTab('${tab.id}')">✕ Delete tab</button>
+        </div>
+      </div>
+      <div class="custom-progress-row">
+        <div class="custom-progress-track"><div class="custom-progress-bar" id="cbar-${tab.id}" style="width:0%"></div></div>
+        <span class="custom-progress-pct" id="cpct-${tab.id}">0%</span>
+      </div>
+      <div class="task-list" id="clist-${tab.id}"></div>
+      <div class="add-row" style="margin-top:8px">
+        <input class="add-input" id="cinput-${tab.id}" placeholder="Add task…" />
+        <button class="add-btn" onclick="window._addCustomTask('${tab.id}')">+ Add</button>
+      </div>`;
+    container.appendChild(page);
+    document.getElementById('cinput-'+tab.id).addEventListener('keydown',e=>{
+      if(e.key==='Enter') addCustomTask(tab.id);
+    });
+  });
+}
+
+function renderCustomTab(tabId) {
+  const tab=customTabs.find(t=>t.id===tabId);
+  if(!tab) return;
+  const list=document.getElementById('clist-'+tabId);
+  if(!list) return;
+  list.innerHTML='';
+  tab.tasks.forEach(task=>{
+    const div=document.createElement('div');
+    div.className='task custom-task'+(task.done?' done':'');
+    div.innerHTML=`
+      <div class="checkbox"><span class="check-icon">✓</span></div>
+      <span class="task-text">${task.text}</span>
+      <button class="delete-btn" title="Remove">✕</button>`;
+    div.querySelector('.checkbox').addEventListener('click',()=>toggleCustom(tabId,task.id));
+    div.querySelector('.task-text').addEventListener('click',()=>toggleCustom(tabId,task.id));
+    div.querySelector('.delete-btn').addEventListener('click',e=>{e.stopPropagation();deleteCustomTask2(tabId,task.id);});
+    list.appendChild(div);
+  });
+  const done=tab.tasks.filter(t=>t.done).length;
+  const pct=tab.tasks.length?Math.round(done/tab.tasks.length*100):0;
+  document.getElementById('cbar-'+tabId).style.width=pct+'%';
+  document.getElementById('cpct-'+tabId).textContent=pct+'%';
+}
+
+/* ══════════════════════════════════════════
+   CUSTOM TAB ACTIONS
+══════════════════════════════════════════ */
+async function toggleCustom(tabId,taskId){
+  const tab=customTabs.find(t=>t.id===tabId), task=tab&&tab.tasks.find(t=>t.id===taskId);
+  if(task){task.done=!task.done; renderCustomTab(tabId); await saveCustom();}
+}
+async function addCustomTask(tabId){
+  const input=document.getElementById('cinput-'+tabId), text=input.value.trim();
+  if(!text) return;
+  const tab=customTabs.find(t=>t.id===tabId);
+  tab.tasks.push({id:'ct'+(nextId++),text,done:false});
+  input.value=''; renderCustomTab(tabId); await saveCustom();
+}
+async function deleteCustomTask2(tabId,taskId){
+  const tab=customTabs.find(t=>t.id===tabId);
+  tab.tasks=tab.tasks.filter(t=>t.id!==taskId);
+  renderCustomTab(tabId); await saveCustom();
+}
+async function resetCustomTab(tabId){
+  if(!confirm('Reset all tasks in this tab?')) return;
+  const tab=customTabs.find(t=>t.id===tabId);
+  tab.tasks.forEach(t=>t.done=false);
+  renderCustomTab(tabId); await saveCustom();
+}
+async function deleteCustomTab(tabId){
+  if(!confirm('Delete this tab and all its tasks?')) return;
+  customTabs=customTabs.filter(t=>t.id!==tabId);
+  await saveCustom();
+  activeTab='routine'; rebuild(); switchTab('routine');
+}
+
+// Expose to inline onclick (module scope workaround)
+window._addCustomTask   = addCustomTask;
+window._resetCustomTab  = resetCustomTab;
+window._deleteCustomTab = deleteCustomTab;
+
+/* ══════════════════════════════════════════
+   ROUTINE ACTIONS
+══════════════════════════════════════════ */
+function renderRoutine(){
+  ['morning','afternoon','evening'].forEach(sec=>{
+    const list=document.getElementById('list-'+sec); list.innerHTML='';
+    routineData[sec].forEach(task=>{
+      const div=document.createElement('div');
+      div.className='task'+(task.done?' done':'');
+      div.innerHTML=`
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">${task.icon}</span>
+        <span class="task-text">${task.text}</span>
+        <button class="delete-btn" title="Remove">✕</button>`;
+      div.querySelector('.checkbox').addEventListener('click',()=>toggleRoutine(sec,task.id));
+      div.querySelector('.task-text').addEventListener('click',()=>toggleRoutine(sec,task.id));
+      div.querySelector('.task-icon').addEventListener('click',()=>toggleRoutine(sec,task.id));
+      div.querySelector('.delete-btn').addEventListener('click',e=>{e.stopPropagation();deleteRoutineTask(sec,task.id);});
+      list.appendChild(div);
+    });
+    const done=routineData[sec].filter(t=>t.done).length;
+    document.getElementById('count-'+sec).textContent=done+'/'+routineData[sec].length;
+  });
+  const all=[...routineData.morning,...routineData.afternoon,...routineData.evening];
+  const done=all.filter(t=>t.done).length, pct=all.length?Math.round(done/all.length*100):0;
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressPct').textContent=pct+'%';
+}
+async function toggleRoutine(sec,id){
+  const t=routineData[sec].find(t=>t.id===id);
+  if(t){t.done=!t.done; renderRoutine(); await saveRoutine();}
+}
+async function deleteRoutineTask(sec,id){
+  routineData[sec]=routineData[sec].filter(t=>t.id!==id);
+  renderRoutine(); await saveRoutine();
+}
+async function addRoutineTask(sec){
+  const input=document.getElementById('input-'+sec), text=input.value.trim();
+  if(!text) return;
+  const icons={morning:'🌅',afternoon:'⚡',evening:'🌙'};
+  routineData[sec].push({id:'r'+(nextId++),text,icon:icons[sec],done:false});
+  input.value=''; renderRoutine(); await saveRoutine();
+}
+async function resetRoutine(){
+  if(!confirm('Reset all tasks for today?')) return;
+  ['morning','afternoon','evening'].forEach(s=>routineData[s].forEach(t=>t.done=false));
+  renderRoutine(); await saveRoutine();
+}
+window.resetRoutine    = resetRoutine;
+window.addRoutineTask  = addRoutineTask;
+window.saveLog         = saveLog;
+window.clearWeeklyLog  = clearWeeklyLog;
+window.selectMood      = selectMood;
+
+document.querySelectorAll('#page-routine .add-input').forEach(inp=>{
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter') addRoutineTask(inp.id.replace('input-',''));
+  });
+});
+
+/* ══════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════ */
+function openModal(){
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('modalName').value='';
+  document.getElementById('modalName').focus();
+  selectedEmoji=EMOJIS[0]; buildEmojiGrid();
+}
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
+window.closeModal=closeModal;
+
+function buildEmojiGrid(){
+  const grid=document.getElementById('emojiGrid'); grid.innerHTML='';
+  EMOJIS.forEach(em=>{
+    const btn=document.createElement('button');
+    btn.className='emoji-opt'+(em===selectedEmoji?' selected':'');
+    btn.textContent=em;
+    btn.onclick=()=>{selectedEmoji=em;buildEmojiGrid();};
+    grid.appendChild(btn);
+  });
+}
+async function confirmNewTab(){
+  const name=document.getElementById('modalName').value.trim();
+  if(!name){document.getElementById('modalName').focus();return;}
+  const id='tab_'+(nextId++);
+  customTabs.push({id,name,icon:selectedEmoji,tasks:[]});
+  await saveCustom(); closeModal();
+  activeTab=id; rebuild(); switchTab(id);
+}
+window.confirmNewTab=confirmNewTab;
+
+document.getElementById('btn-routine').addEventListener('click',()=>switchTab('routine'));
+document.getElementById('btn-weekly').addEventListener('click',()=>switchTab('weekly'));
+document.getElementById('addTabBtn').addEventListener('click',openModal);
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+document.getElementById('modalName').addEventListener('keydown',e=>{if(e.key==='Enter')confirmNewTab();});
+
+/* ══════════════════════════════════════════
+   REBUILD
+══════════════════════════════════════════ */
+function rebuild(){
+  buildTabNav(); buildCustomPages(); renderRoutine();
+  customTabs.forEach(t=>renderCustomTab(t.id));
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+const now=new Date();
+document.getElementById('dateLabel').textContent=`${FULL_DAYS[now.getDay()]} · ${MONTHS[now.getMonth()]} ${now.getDate()}`;
+
+await loadAll();
+rebuild();
+switchTab('routine');
+startRealtimeSync();
+
+</script>
+</body>
+</html>
