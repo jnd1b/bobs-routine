@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0037)https://jnd1b.github.io/bobs-routine/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Bob's Routine">
+<meta name="apple-mobile-web-app-title" content="Bob&#39;s Routine">
 <title>Bob's Daily Routine</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -17,6 +17,17 @@
 }
 html,body{min-height:100%;background:var(--bg)}
 body{font-family:'Inter',sans-serif;padding:16px;max-width:720px;margin:0 auto;padding-bottom:40px}
+
+/* ── SYNC INDICATOR ── */
+.sync-bar{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;background:var(--card);border:1px solid var(--border);margin-bottom:12px;font-size:12px;font-weight:600;color:var(--muted);transition:all 0.3s}
+.sync-bar.syncing{border-color:var(--c3);color:var(--c3l)}
+.sync-bar.synced{border-color:var(--c4);color:var(--c4l)}
+.sync-bar.error{border-color:#c04040;color:#ff8080}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background 0.3s}
+.sync-bar.syncing .sync-dot{background:var(--c3);animation:pulse 1s infinite}
+.sync-bar.synced .sync-dot{background:var(--c4)}
+.sync-bar.error .sync-dot{background:#c04040}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 
 /* ── TAB NAV ── */
 .tab-nav{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
@@ -131,8 +142,6 @@ body{font-family:'Inter',sans-serif;padding:16px;max-width:720px;margin:0 auto;p
 .wt-tab-bars{flex:1;display:flex;gap:4px}
 .wt-tab-dot{flex:1;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;transition:all 0.2s}
 .wt-tab-pct{font-size:12px;font-weight:700;color:var(--muted);min-width:34px;text-align:right}
-.wt-log-btn{width:100%;margin-top:6px;padding:10px;border-radius:10px;border:1px solid var(--c1l);background:transparent;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:var(--c1l);cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:0.6px}
-.wt-log-btn:hover{background:var(--c2);color:#fff;border-color:var(--c2)}
 .wt-clear-btn{width:100%;margin-top:8px;padding:8px;border-radius:10px;border:1px solid var(--border);background:transparent;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:0.6px}
 .wt-clear-btn:hover{border-color:#c04040;color:#c04040}
 
@@ -178,25 +187,62 @@ body{font-family:'Inter',sans-serif;padding:16px;max-width:720px;margin:0 auto;p
 .modal-btns{display:flex;gap:8px}
 .modal-cancel{flex:1;padding:9px;border-radius:8px;border:1px solid var(--border);background:transparent;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
 .modal-confirm{flex:1;padding:9px;border-radius:8px;border:none;background:var(--c2);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#fff;cursor:pointer}
-
 .footer{text-align:center;font-size:11px;color:var(--muted);margin-top:16px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px}
+
+/* ── FITNESS DAY-GROUP HEADERS ── */
+.task-group-header{display:flex;align-items:center;gap:8px;margin:14px 0 6px;padding:0 2px}
+.task-group-header:first-child{margin-top:2px}
+.task-group-header .tgh-line{flex:1;height:1px;background:var(--border)}
+.task-group-header .tgh-text{font-size:11px;font-weight:700;color:var(--c1l);text-transform:uppercase;letter-spacing:0.7px;white-space:nowrap}
+
+/* ── CALORIE TRACKER PAGE ── */
+.cal-ring-wrap{display:flex;align-items:center;gap:18px;margin-bottom:6px}
+.cal-ring-track{background:var(--border);border-radius:8px;height:14px;flex:1;overflow:hidden}
+.cal-ring-bar{height:100%;border-radius:8px;background:var(--c4);transition:width 0.35s ease,background 0.35s ease}
+.cal-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.cal-stat{background:#1a1a2e;border:1px solid var(--border);border-radius:12px;padding:12px 10px;text-align:center}
+.cal-stat .val{font-size:18px;font-weight:800;color:var(--c1l)}
+.cal-stat.over .val{color:#ff8080}
+.cal-stat .lbl{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.6px;margin-top:3px}
+.cal-goal-row{display:flex;align-items:center;gap:8px;margin-top:12px}
+.cal-goal-row label{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.cal-goal-input{width:80px;padding:7px 10px;border-radius:8px;border:1px solid var(--border);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--card);outline:none}
+.cal-goal-input:focus{border-color:var(--c1l)}
+.cal-goal-save{padding:7px 12px;border-radius:8px;border:none;background:var(--c2);font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:#fff;cursor:pointer}
+.cal-add-row{display:flex;gap:8px;margin-top:4px}
+.cal-add-row .add-input{flex:2}
+.cal-cals-input{width:90px;padding:9px 12px;border-radius:8px;border:1px solid var(--border);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--text);background:var(--card);outline:none}
+.cal-cals-input::placeholder{color:var(--muted)}
+.cal-cals-input:focus{border-color:var(--c1l);background:#28284a}
+.cal-entry{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;background:var(--card);border:1px solid var(--border)}
+.cal-entry-name{font-size:14px;font-weight:500;color:var(--text);flex:1}
+.cal-entry-kcal{font-size:13px;font-weight:700;color:var(--c1l)}
+.cal-entry-time{font-size:11px;color:var(--muted);font-weight:600}
+.cal-empty{font-size:13px;color:var(--muted);text-align:center;padding:14px}
 </style>
 </head>
 <body>
 
+<!-- SYNC BAR -->
+<div class="sync-bar synced" id="syncBar">
+  <div class="sync-dot" id="syncDot"></div>
+  <span id="syncText">Synced ☁️</span>
+</div>
+
 <!-- TAB NAV -->
 <nav class="tab-nav" id="tabNav">
-  <button class="tab-btn" data-tab="routine" id="btn-routine">📋 Routine</button>
+  <button class="tab-btn active" data-tab="routine" id="btn-routine">📋 Routine</button>
   <button class="tab-btn" data-tab="weekly" id="btn-weekly">📊 Weekly</button>
-  <button class="tab-btn add-tab-btn" id="addTabBtn">+ New Tab</button>
+  <button class="tab-btn" data-tab="calories" id="btn-calories">🍎 Calories</button>
+  <button class="tab-btn" data-tab="gym" data-custom="1">🏋️ Fitness</button><button class="tab-btn" data-tab="work" data-custom="1">💼 Work</button><button class="tab-btn add-tab-btn" id="addTabBtn">+ New Tab</button>
 </nav>
 
 <!-- ROUTINE PAGE -->
-<div class="page" id="page-routine">
+<div class="page active" id="page-routine">
   <div class="header">
     <div class="header-inner">
       <h1><span>Bob</span>'s Daily Routine</h1>
-      <div class="date" id="dateLabel"></div>
+      <div class="date" id="dateLabel">Thursday · Jun 25</div>
       <div class="progress-wrap">
         <div class="progress-row">
           <span class="progress-label">Progress</span>
@@ -209,89 +255,132 @@ body{font-family:'Inter',sans-serif;padding:16px;max-width:720px;margin:0 auto;p
       <button class="reset-btn" onclick="resetRoutine()">↺ Reset for today</button>
     </div>
   </div>
-
   <div class="section morning">
     <div class="section-header">
       <div class="section-icon">🌅</div>
       <h2>Morning</h2>
-      <span class="section-count" id="count-morning">0/0</span>
+      <span class="section-count" id="count-morning">0/5</span>
     </div>
-    <div class="task-list" id="list-morning"></div>
+    <div class="task-list" id="list-morning"><div class="task">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">💧</span>
+        <span class="task-text">Wake up &amp; hydrate</span>
+        <button class="delete-btn" title="Remove">✕</button></div><div class="task">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">💪</span>
+        <span class="task-text">Work out / stretch</span>
+        <button class="delete-btn" title="Remove">✕</button></div><div class="task">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">🚿</span>
+        <span class="task-text">Cold shower</span>
+        <button class="delete-btn" title="Remove">✕</button></div><div class="task">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">🍳</span>
+        <span class="task-text">Breakfast</span>
+        <button class="delete-btn" title="Remove">✕</button></div><div class="task">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">📋</span>
+        <span class="task-text">Plan the day</span>
+        <button class="delete-btn" title="Remove">✕</button></div></div>
     <div class="add-row">
-      <input class="add-input" id="input-morning" placeholder="Add morning task..." />
-      <button class="add-btn morning" onclick="addRoutineTask('morning')">+ Add</button>
+      <input class="add-input" id="input-morning" placeholder="Add morning task…">
+      <button class="add-btn morning" onclick="addRoutineTask(&#39;morning&#39;)">+ Add</button>
     </div>
   </div>
-
   <div class="section afternoon">
     <div class="section-header">
       <div class="section-icon">⚡</div>
       <h2>Afternoon</h2>
-      <span class="section-count" id="count-afternoon">0/0</span>
+      <span class="section-count" id="count-afternoon">0/4</span>
     </div>
-    <div class="task-list" id="list-afternoon"></div>
+    <div class="task-list" id="list-afternoon"><div class="task">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">🎯</span>
+        <span class="task-text">Deep work session</span>
+        <button class="delete-btn" title="Remove">✕</button></div><div class="task">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">🥩</span>
+        <span class="task-text">Lunch</span>
+        <button class="delete-btn" title="Remove">✕</button></div><div class="task">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">📬</span>
+        <span class="task-text">Review tasks / emails</span>
+        <button class="delete-btn" title="Remove">✕</button></div><div class="task">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">🚶</span>
+        <span class="task-text">Short walk</span>
+        <button class="delete-btn" title="Remove">✕</button></div></div>
     <div class="add-row">
-      <input class="add-input" id="input-afternoon" placeholder="Add afternoon task..." />
-      <button class="add-btn afternoon" onclick="addRoutineTask('afternoon')">+ Add</button>
+      <input class="add-input" id="input-afternoon" placeholder="Add afternoon task…">
+      <button class="add-btn afternoon" onclick="addRoutineTask(&#39;afternoon&#39;)">+ Add</button>
     </div>
   </div>
-
   <div class="section evening">
     <div class="section-header">
       <div class="section-icon">🌙</div>
       <h2>Evening</h2>
-      <span class="section-count" id="count-evening">0/0</span>
+      <span class="section-count" id="count-evening">0/5</span>
     </div>
-    <div class="task-list" id="list-evening"></div>
+    <div class="task-list" id="list-evening"><div class="task">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">✅</span>
+        <span class="task-text">Wrap up work</span>
+        <button class="delete-btn" title="Remove">✕</button></div><div class="task">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">🍽️</span>
+        <span class="task-text">Dinner</span>
+        <button class="delete-btn" title="Remove">✕</button></div><div class="task">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">📖</span>
+        <span class="task-text">Read / learn something</span>
+        <button class="delete-btn" title="Remove">✕</button></div><div class="task">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">🗒️</span>
+        <span class="task-text">Prep for tomorrow</span>
+        <button class="delete-btn" title="Remove">✕</button></div><div class="task">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <span class="task-icon">😴</span>
+        <span class="task-text">Lights out</span>
+        <button class="delete-btn" title="Remove">✕</button></div></div>
     <div class="add-row">
-      <input class="add-input" id="input-evening" placeholder="Add evening task..." />
-      <button class="add-btn evening" onclick="addRoutineTask('evening')">+ Add</button>
+      <input class="add-input" id="input-evening" placeholder="Add evening task…">
+      <button class="add-btn evening" onclick="addRoutineTask(&#39;evening&#39;)">+ Add</button>
     </div>
   </div>
 </div>
 
-<!-- WEEKLY TRACKER PAGE -->
+<!-- WEEKLY PAGE -->
 <div class="page" id="page-weekly">
   <div class="wt-header">
     <h1>📊 Weekly Tracker</h1>
     <p id="wt-week-label"></p>
   </div>
-
-  <!-- snapshot stats -->
   <div class="wt-snapshot">
     <div class="wt-stat"><div class="val" id="wt-avg">—</div><div class="lbl">Avg / day</div></div>
     <div class="wt-stat"><div class="val" id="wt-best">—</div><div class="lbl">Best day</div></div>
     <div class="wt-stat"><div class="val" id="wt-streak">0</div><div class="lbl">Streak 🔥</div></div>
   </div>
-
-  <!-- overall daily bar chart -->
   <div class="wt-section">
     <div class="wt-section-title">Overall completion this week</div>
     <div class="wt-chart" id="wt-chart"></div>
   </div>
-
-  <!-- per-tab breakdown -->
   <div class="wt-section">
     <div class="wt-section-title">Tab breakdown — today</div>
     <div class="wt-tabs-grid" id="wt-tabs-grid"></div>
   </div>
-
-  <!-- Daily mood + notes log -->
   <div class="dl-section">
     <div class="dl-section-title">Today's Daily Log <span class="dl-saved-badge" id="dl-saved-badge">✓ Saved</span></div>
     <div class="dl-mood-row" id="dl-mood-row">
-      <button class="dl-mood-btn" data-mood="terrible" onclick="selectMood('terrible')"><span>😣</span><span class="dl-mood-label">Rough</span></button>
-      <button class="dl-mood-btn" data-mood="meh" onclick="selectMood('meh')"><span>😐</span><span class="dl-mood-label">Meh</span></button>
-      <button class="dl-mood-btn" data-mood="okay" onclick="selectMood('okay')"><span>🙂</span><span class="dl-mood-label">Okay</span></button>
-      <button class="dl-mood-btn" data-mood="good" onclick="selectMood('good')"><span>😄</span><span class="dl-mood-label">Good</span></button>
-      <button class="dl-mood-btn" data-mood="great" onclick="selectMood('great')"><span>🔥</span><span class="dl-mood-label">Fired up</span></button>
+      <button class="dl-mood-btn" data-mood="terrible" onclick="selectMood(&#39;terrible&#39;)"><span>😣</span><span class="dl-mood-label">Rough</span></button>
+      <button class="dl-mood-btn" data-mood="meh" onclick="selectMood(&#39;meh&#39;)"><span>😐</span><span class="dl-mood-label">Meh</span></button>
+      <button class="dl-mood-btn" data-mood="okay" onclick="selectMood(&#39;okay&#39;)"><span>🙂</span><span class="dl-mood-label">Okay</span></button>
+      <button class="dl-mood-btn" data-mood="good" onclick="selectMood(&#39;good&#39;)"><span>😄</span><span class="dl-mood-label">Good</span></button>
+      <button class="dl-mood-btn" data-mood="great" onclick="selectMood(&#39;great&#39;)"><span>🔥</span><span class="dl-mood-label">Fired up</span></button>
     </div>
     <label class="dl-notes-label">Notes / Reflection</label>
     <textarea class="dl-notes-input" id="dl-notes" placeholder="What went well? What to improve tomorrow?"></textarea>
     <button class="dl-save-btn" onclick="saveLog()">⬇ Save today's log</button>
   </div>
-
-  <!-- Log history -->
   <div class="wt-section">
     <div class="wt-section-title">Log History</div>
     <div class="log-history" id="log-history"></div>
@@ -299,15 +388,97 @@ body{font-family:'Inter',sans-serif;padding:16px;max-width:720px;margin:0 auto;p
   </div>
 </div>
 
-<!-- CUSTOM PAGES container -->
-<div id="customPagesContainer"></div>
+<!-- CALORIES PAGE -->
+<div class="page" id="page-calories">
+  <div class="header">
+    <div class="header-inner">
+      <h1>🍎 Calorie <span>Intake</span></h1>
+      <div class="date" id="cal-date-label">Thursday · Jun 25</div>
+      <div class="cal-ring-wrap" style="margin-top:14px">
+        <div class="cal-ring-track"><div class="cal-ring-bar" id="cal-bar" style="width:0%"></div></div>
+      </div>
+      <div class="cal-stats-row">
+        <div class="cal-stat"><div class="val" id="cal-consumed">0</div><div class="lbl">Consumed</div></div>
+        <div class="cal-stat" id="cal-remaining-stat"><div class="val" id="cal-remaining">2400</div><div class="lbl">Remaining</div></div>
+        <div class="cal-stat"><div class="val" id="cal-goal-display">2400</div><div class="lbl">Goal</div></div>
+      </div>
+      <div class="cal-goal-row">
+        <label for="cal-goal-input">Daily goal</label>
+        <input class="cal-goal-input" id="cal-goal-input" type="number" min="0" placeholder="2400">
+        <button class="cal-goal-save" onclick="saveCalorieGoal()">Set</button>
+        <button class="reset-btn" style="margin-top:0;width:auto;padding:7px 12px" onclick="resetCalorieDay()">↺ Reset day</button>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🍽️</div>
+      <h2>Food Log</h2>
+      <span class="section-count" id="cal-count">0 items</span>
+    </div>
+    <div class="task-list" id="cal-log-list"></div>
+    <div class="cal-add-row">
+      <input class="add-input" id="cal-food-input" placeholder="Food / meal…">
+      <input class="cal-cals-input" id="cal-kcal-input" type="number" min="0" placeholder="kcal">
+      <button class="add-btn" style="background:var(--c4)" onclick="addCalorieEntry()">+ Add</button>
+    </div>
+  </div>
+</div>
+<div id="customPagesContainer"><div class="page" id="page-gym" data-custom="1">
+      <div class="custom-page-header">
+        <div class="custom-page-title"><span class="tab-icon">🏋️</span>Fitness</div>
+        <div style="display:flex;gap:8px">
+          <button class="custom-reset-btn" onclick="window._resetCustomTab(&#39;gym&#39;)">↺ Reset</button>
+          <button class="delete-tab-btn" onclick="window._deleteCustomTab(&#39;gym&#39;)">✕ Delete tab</button>
+        </div>
+      </div>
+      <div class="custom-progress-row">
+        <div class="custom-progress-track"><div class="custom-progress-bar" id="cbar-gym" style="width:0%"></div></div>
+        <span class="custom-progress-pct" id="cpct-gym">0%</span>
+      </div>
+      <div class="task-list" id="clist-gym"></div>
+      <div class="add-row" style="margin-top:8px">
+        <input class="add-input" id="cinput-gym" placeholder="Add task…">
+        <button class="add-btn" onclick="window._addCustomTask(&#39;gym&#39;)">+ Add</button>
+      </div></div><div class="page" id="page-work" data-custom="1">
+      <div class="custom-page-header">
+        <div class="custom-page-title"><span class="tab-icon">💼</span>Work</div>
+        <div style="display:flex;gap:8px">
+          <button class="custom-reset-btn" onclick="window._resetCustomTab(&#39;work&#39;)">↺ Reset</button>
+          <button class="delete-tab-btn" onclick="window._deleteCustomTab(&#39;work&#39;)">✕ Delete tab</button>
+        </div>
+      </div>
+      <div class="custom-progress-row">
+        <div class="custom-progress-track"><div class="custom-progress-bar" id="cbar-work" style="width:0%"></div></div>
+        <span class="custom-progress-pct" id="cpct-work">0%</span>
+      </div>
+      <div class="task-list" id="clist-work"><div class="task custom-task">
+      <div class="checkbox"><span class="check-icon">✓</span></div>
+      <span class="task-text">Check emails &amp; Slack</span>
+      <button class="delete-btn" title="Remove">✕</button></div><div class="task custom-task">
+      <div class="checkbox"><span class="check-icon">✓</span></div>
+      <span class="task-text">Team standup</span>
+      <button class="delete-btn" title="Remove">✕</button></div><div class="task custom-task">
+      <div class="checkbox"><span class="check-icon">✓</span></div>
+      <span class="task-text">Focus block (2 hrs)</span>
+      <button class="delete-btn" title="Remove">✕</button></div><div class="task custom-task">
+      <div class="checkbox"><span class="check-icon">✓</span></div>
+      <span class="task-text">Review deliverables</span>
+      <button class="delete-btn" title="Remove">✕</button></div><div class="task custom-task">
+      <div class="checkbox"><span class="check-icon">✓</span></div>
+      <span class="task-text">EOD update / wrap</span>
+      <button class="delete-btn" title="Remove">✕</button></div></div>
+      <div class="add-row" style="margin-top:8px">
+        <input class="add-input" id="cinput-work" placeholder="Add task…">
+        <button class="add-btn" onclick="window._addCustomTask(&#39;work&#39;)">+ Add</button>
+      </div></div></div>
 
 <!-- NEW TAB MODAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <h3>New Tab</h3>
     <label>Tab name</label>
-    <input id="modalName" placeholder="e.g. Gym, Work, Study..." maxlength="24" />
+    <input id="modalName" placeholder="e.g. Gym, Work, Study…" maxlength="24">
     <label>Icon</label>
     <div class="emoji-grid" id="emojiGrid"></div>
     <div class="modal-btns">
@@ -317,14 +488,106 @@ body{font-family:'Inter',sans-serif;padding:16px;max-width:720px;margin:0 auto;p
   </div>
 </div>
 
-<div class="footer" id="footerHint">Tap a task to check it off · hover to delete</div>
+<div class="footer">Tap a task to check it off · hover to delete · ☁️ synced via Firebase</div>
 
-<script>
-const EMOJIS = ['💪','💼','📚','🏃','🎯','🧘','🏋️','🎮','🎨','🎸','🍳','🧹','💊','🚴','🧠','✍️','🌿','💰','📸','🛠️'];
-const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const FULL_DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+<!-- Firebase SDK -->
+<script type="module">
+/* ══════════════════════════════════════════
+   FIREBASE CONFIG
+══════════════════════════════════════════ */
+const firebaseConfig = {
+  apiKey: "AIzaSyCK0gutURx7HJEz4KwSNQJg_ESxX4pmY30",
+  authDomain: "routine-tracker-e684a.firebaseapp.com",
+  projectId: "routine-tracker-e684a",
+  storageBucket: "routine-tracker-e684a.firebasestorage.app",
+  messagingSenderId: "320186684614",
+  appId: "1:320186684614:web:8a90ef741437ea1d69b3c7"
+};
+
+/* ── Load Firebase dynamically. If the CDN is blocked/unreachable
+   (offline preview, restrictive network, etc.) the app falls back
+   to local-only mode instead of failing to load entirely. ── */
+let app=null, db=null, FB_OK=false;
+let initializeApp,getFirestore,doc,getDoc,setDoc,onSnapshot,collection,getDocs,deleteDoc;
+try {
+  ({ initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"));
+  ({ getFirestore, doc, getDoc, setDoc, onSnapshot, collection, getDocs, deleteDoc } =
+    await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"));
+  app = initializeApp(firebaseConfig);
+  db  = getFirestore(app);
+  FB_OK = true;
+} catch(e) {
+  console.warn('Firebase unavailable — running in local-only mode.', e);
+  // Stub implementations so the rest of the app behaves the same,
+  // just without cloud sync.
+  doc = ()=>({});
+  getDoc = async ()=>({ exists:()=>false, data:()=>({data:null}) });
+  setDoc = async ()=>{};
+  onSnapshot = ()=>()=>{};
+  collection = ()=>({});
+  getDocs = async ()=>({forEach:()=>{}});
+  deleteDoc = async ()=>{};
+}
+
+/* ── Firestore document refs (all data under user "bob") ── */
+const USER = 'bob';
+const routineRef    = doc(db, 'users', USER, 'data', 'routine');
+const customTabsRef = doc(db, 'users', USER, 'data', 'customTabs');
+const weeklyLogRef  = doc(db, 'users', USER, 'data', 'weeklyLog');
+const calorieRef    = doc(db, 'users', USER, 'data', 'calories');
+
+/* ══════════════════════════════════════════
+   CONSTANTS & STATE
+══════════════════════════════════════════ */
+const EMOJIS     = ['💪','💼','📚','🏃','🎯','🧘','🏋️','🎮','🎨','🎸','🍳','🧹','💊','🚴','🧠','✍️','🌿','💰','📸','🛠️'];
+const DAY_NAMES  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS     = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const FULL_DAYS  = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MOOD_EMOJI = { terrible:'😣', meh:'😐', okay:'🙂', good:'😄', great:'🔥' };
+const DEFAULT_CALORIE_GOAL = 2400;
+
+/* Exercise checklist built from Bob's training program (4-day split) */
+const FITNESS_DEFAULT_TASKS = [
+  {header:true, text:'Must Do — Before Every Session'},
+  {text:'Warm up (5–10 min walking)'},
+  {text:'Proper stretching'},
+  {header:true, text:'Day 1 — Upper Day'},
+  {text:'Flat dumbbell press — 12–15 reps × 3 sets'},
+  {text:'Incline dumbbell press — 12–15 reps × 3 sets'},
+  {text:'Dumbbell row — 12–15 reps × 3 sets'},
+  {text:'Lat pulldown machine — 12–15 reps × 3 sets'},
+  {text:'Overhead dumbbell tricep extension — 15 reps × 3 sets'},
+  {text:'Tricep extension — 15 reps × 3 sets'},
+  {text:'Planks — 20–30 sec × 3 sets'},
+  {text:'Cardio (walking / stationary bike) — 10–15 min'},
+  {header:true, text:'Day 2 — Lower Day'},
+  {text:'Goblet squat — 12–15 reps × 3 sets'},
+  {text:'Dumbbell RDL — 12–15 reps × 3 sets'},
+  {text:'Leg curl — 12–15 reps × 3 sets'},
+  {text:'Leg extension — 12–15 reps × 3 sets'},
+  {text:'Shoulder lateral raises — 15 reps × 3 sets'},
+  {text:'Machine shoulder press — 15 reps × 3 sets'},
+  {text:'Planks — 20–30 sec × 3 sets'},
+  {text:'Cardio (walking / stationary bike) — 10–15 min'},
+  {header:true, text:'Day 3 — Upper Day'},
+  {text:'Lat pulldown machine — 12–15 reps × 3 sets'},
+  {text:'Machine row — 12–15 reps × 3 sets'},
+  {text:'Push up (kneeling or regular) — 12–15 reps × 3 sets'},
+  {text:'Dumbbell row — 12–15 reps × 3 sets'},
+  {text:'Bicep curl — 15 reps × 3 sets'},
+  {text:'Hammer curl — 15 reps × 3 sets'},
+  {text:'Planks — 20–30 sec × 3 sets'},
+  {text:'Cardio (walking / stationary bike) — 10–15 min'},
+  {header:true, text:'Day 4 — Lower Day'},
+  {text:'Leg press — 12–15 reps × 3 sets'},
+  {text:'Lunges (bodyweight / weighted) — 12–15 reps × 3 sets'},
+  {text:'Leg curl — 12–15 reps × 3 sets'},
+  {text:'Leg extension — 12–15 reps × 3 sets'},
+  {text:'Overhead bar (shoulder press) — 15 reps × 3 sets'},
+  {text:'Shoulder lateral raises — 15 reps × 3 sets'},
+  {text:'Planks — 20–30 sec × 3 sets'},
+  {text:'Cardio (walking / stationary bike) — 10–15 min'},
+];
 
 const ROUTINE_DEFAULTS = {
   morning:[
@@ -349,23 +612,34 @@ const ROUTINE_DEFAULTS = {
   ]
 };
 
-let nextId = 200;
+let nextId      = 200;
 let routineData = {};
-let customTabs = [];
-let weeklyLog = {};
-let activeTab = 'routine';
+let customTabs  = [];
+let weeklyLog   = {};
+let calorieData = { goal: DEFAULT_CALORIE_GOAL, log: {} };
+let activeTab   = 'routine';
 let selectedEmoji = EMOJIS[0];
-let selectedMood = null;
+let selectedMood  = null;
+let isSaving    = false;
 
-/* ── DATE HELPERS ── */
+/* ══════════════════════════════════════════
+   SYNC UI
+══════════════════════════════════════════ */
+function setSyncState(state, text) {
+  const bar = document.getElementById('syncBar');
+  bar.className = 'sync-bar ' + state;
+  document.getElementById('syncText').textContent = text;
+}
+
+/* ══════════════════════════════════════════
+   DATE HELPERS
+══════════════════════════════════════════ */
 function todayKey() {
   const d = new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 function getWeekKeys() {
-  const today = new Date();
-  const dow = today.getDay();
-  const keys = [];
+  const today = new Date(), dow = today.getDay(), keys = [];
   for (let i = 0; i < 7; i++) {
     const d = new Date(today);
     d.setDate(today.getDate() - dow + i);
@@ -379,272 +653,399 @@ function formatDateKey(key) {
   return FULL_DAYS[dt.getDay()]+', '+MONTHS[dt.getMonth()]+' '+dt.getDate();
 }
 
-/* ── STORAGE ── */
-function loadAll() {
-  const r = localStorage.getItem('bobs_routine');
-  routineData = r ? JSON.parse(r) : {
-    morning: ROUTINE_DEFAULTS.morning.map(t=>({...t,done:false})),
-    afternoon: ROUTINE_DEFAULTS.afternoon.map(t=>({...t,done:false})),
-    evening: ROUTINE_DEFAULTS.evening.map(t=>({...t,done:false})),
-  };
-  const c = localStorage.getItem('bobs_custom_tabs');
-  customTabs = c ? JSON.parse(c) : [
-    {id:'gym', name:'Gym', icon:'💪', tasks:[
-      {id:'g1',text:'Warm up (10 min)',done:false},
-      {id:'g2',text:'Main workout',done:false},
-      {id:'g3',text:'Cool down & stretch',done:false},
-      {id:'g4',text:'Protein shake',done:false},
-    ]},
-    {id:'work', name:'Work', icon:'💼', tasks:[
-      {id:'w1',text:'Check emails & Slack',done:false},
-      {id:'w2',text:'Team standup',done:false},
-      {id:'w3',text:'Focus block (2 hrs)',done:false},
-      {id:'w4',text:'Review deliverables',done:false},
-      {id:'w5',text:'EOD update / wrap',done:false},
-    ]},
-  ];
-  const w = localStorage.getItem('bobs_weekly_log');
-  weeklyLog = w ? JSON.parse(w) : {};
+/* ══════════════════════════════════════════
+   FIREBASE SAVE / LOAD
+══════════════════════════════════════════ */
+async function saveRoutine() {
+  setSyncState('syncing','Saving…');
+  try {
+    await setDoc(routineRef, { data: routineData });
+    setSyncState('synced','All changes saved ☁️');
+  } catch(e) { setSyncState('error','Save failed — check connection'); }
 }
-function saveRoutine() { localStorage.setItem('bobs_routine', JSON.stringify(routineData)); }
-function saveCustom()  { localStorage.setItem('bobs_custom_tabs', JSON.stringify(customTabs)); }
-function saveWeekly()  { localStorage.setItem('bobs_weekly_log', JSON.stringify(weeklyLog)); }
-
-/* ── COMPUTE SCORES ── */
-function routineScore() {
-  const all = [...routineData.morning,...routineData.afternoon,...routineData.evening];
-  if (!all.length) return 0;
-  return Math.round(all.filter(t=>t.done).length / all.length * 100);
+async function saveCustom() {
+  setSyncState('syncing','Saving…');
+  try {
+    await setDoc(customTabsRef, { data: customTabs });
+    setSyncState('synced','All changes saved ☁️');
+  } catch(e) { setSyncState('error','Save failed — check connection'); }
 }
-function customScore(tabId) {
-  const tab = customTabs.find(t=>t.id===tabId);
-  if (!tab || !tab.tasks.length) return 0;
-  return Math.round(tab.tasks.filter(t=>t.done).length / tab.tasks.length * 100);
+async function saveWeekly() {
+  setSyncState('syncing','Saving…');
+  try {
+    await setDoc(weeklyLogRef, { data: weeklyLog });
+    setSyncState('synced','All changes saved ☁️');
+  } catch(e) { setSyncState('error','Save failed — check connection'); }
 }
-function overallScore() {
-  const scores = [routineScore(), ...customTabs.map(t=>customScore(t.id))];
-  if (!scores.length) return 0;
-  return Math.round(scores.reduce((a,b)=>a+b,0) / scores.length);
+async function saveCalories() {
+  setSyncState('syncing','Saving…');
+  try {
+    await setDoc(calorieRef, { data: calorieData });
+    setSyncState('synced','All changes saved ☁️');
+  } catch(e) { setSyncState('error','Save failed — check connection'); }
 }
 
-/* ── MOOD ── */
-function selectMood(mood) {
-  selectedMood = mood;
-  document.querySelectorAll('.dl-mood-btn').forEach(b => {
-    b.classList.toggle('selected', b.dataset.mood === mood);
+async function loadAll() {
+  setSyncState('syncing','Loading from cloud…');
+  try {
+    const [rSnap, cSnap, wSnap, kSnap] = await Promise.all([
+      getDoc(routineRef),
+      getDoc(customTabsRef),
+      getDoc(weeklyLogRef),
+      getDoc(calorieRef)
+    ]);
+    routineData = rSnap.exists() ? rSnap.data().data : {
+      morning:  ROUTINE_DEFAULTS.morning.map(t=>({...t,done:false})),
+      afternoon:ROUTINE_DEFAULTS.afternoon.map(t=>({...t,done:false})),
+      evening:  ROUTINE_DEFAULTS.evening.map(t=>({...t,done:false})),
+    };
+    customTabs = cSnap.exists() ? cSnap.data().data : [
+      {id:'gym',  name:'Fitness', icon:'🏋️', fitnessMigrated:true, tasks:
+        FITNESS_DEFAULT_TASKS.map((t,i)=>t.header?{id:'gh'+i,text:t.text,header:true}:{id:'g'+i,text:t.text,done:false})
+      },
+      {id:'work', name:'Work', icon:'💼', tasks:[
+        {id:'w1',text:'Check emails & Slack',done:false},
+        {id:'w2',text:'Team standup',done:false},
+        {id:'w3',text:'Focus block (2 hrs)',done:false},
+        {id:'w4',text:'Review deliverables',done:false},
+        {id:'w5',text:'EOD update / wrap',done:false},
+      ]},
+    ];
+    weeklyLog = wSnap.exists() ? wSnap.data().data : {};
+    calorieData = kSnap.exists() ? kSnap.data().data : { goal: DEFAULT_CALORIE_GOAL, log: {} };
+    setSyncState(FB_OK ? 'synced' : 'error', FB_OK ? 'Synced ☁️' : 'Offline — local mode (no cloud sync)');
+  } catch(e) {
+    setSyncState('error','Could not reach cloud — showing offline data');
+  }
+}
+
+/* ── One-time migration: rename old "Gym" tab to "Fitness" with the
+   real exercise checklist from Bob's training program ── */
+async function migrateFitnessTab() {
+  const gymTab = customTabs.find(t=>t.id==='gym');
+  if (gymTab && !gymTab.fitnessMigrated) {
+    gymTab.name = 'Fitness';
+    gymTab.icon = '🏋️';
+    gymTab.fitnessMigrated = true;
+    gymTab.tasks = FITNESS_DEFAULT_TASKS.map((t,i)=>
+      t.header ? {id:'gh'+(nextId++),text:t.text,header:true}
+               : {id:'g'+(nextId++),text:t.text,done:false}
+    );
+    await saveCustom();
+  }
+}
+
+/* ── Real-time listener: updates UI if another device saves ── */
+function startRealtimeSync() {
+  onSnapshot(routineRef, snap => {
+    if (!snap.exists() || isSaving) return;
+    const incoming = snap.data().data;
+    routineData = incoming;
+    renderRoutine();
+    setSyncState('synced','Synced from another device ☁️');
+  });
+  onSnapshot(customTabsRef, snap => {
+    if (!snap.exists() || isSaving) return;
+    customTabs = snap.data().data;
+    rebuild();
+    switchTab(activeTab);
+    setSyncState('synced','Synced from another device ☁️');
+  });
+  onSnapshot(weeklyLogRef, snap => {
+    if (!snap.exists() || isSaving) return;
+    weeklyLog = snap.data().data;
+    if (activeTab === 'weekly') renderWeekly();
+    setSyncState('synced','Synced from another device ☁️');
+  });
+  onSnapshot(calorieRef, snap => {
+    if (!snap.exists() || isSaving) return;
+    calorieData = snap.data().data;
+    if (activeTab === 'calories') renderCalories();
+    setSyncState('synced','Synced from another device ☁️');
   });
 }
 
-/* ── SAVE LOG ── */
-function saveLog() {
+/* ══════════════════════════════════════════
+   SCORES
+══════════════════════════════════════════ */
+function routineScore() {
+  const all = [...routineData.morning,...routineData.afternoon,...routineData.evening];
+  return all.length ? Math.round(all.filter(t=>t.done).length/all.length*100) : 0;
+}
+function customScore(tabId) {
+  const tab = customTabs.find(t=>t.id===tabId);
+  if (!tab) return 0;
+  const real = tab.tasks.filter(t=>!t.header);
+  return real.length ? Math.round(real.filter(t=>t.done).length/real.length*100) : 0;
+}
+function overallScore() {
+  const scores = [routineScore(),...customTabs.map(t=>customScore(t.id))];
+  return scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
+}
+
+/* ══════════════════════════════════════════
+   MOOD
+══════════════════════════════════════════ */
+function selectMood(mood) {
+  selectedMood = mood;
+  document.querySelectorAll('.dl-mood-btn').forEach(b => b.classList.toggle('selected', b.dataset.mood===mood));
+}
+
+/* ══════════════════════════════════════════
+   WEEKLY LOG
+══════════════════════════════════════════ */
+async function saveLog() {
   const key = todayKey();
   const tabScores = { routine: routineScore() };
   customTabs.forEach(t => { tabScores[t.id] = customScore(t.id); });
-  const notes = document.getElementById('dl-notes').value.trim();
-  weeklyLog[key] = {
-    overall: overallScore(),
-    tabs: tabScores,
-    mood: selectedMood,
-    notes: notes
-  };
-  saveWeekly();
+  weeklyLog[key] = { overall:overallScore(), tabs:tabScores, mood:selectedMood, notes:document.getElementById('dl-notes').value.trim() };
+  await saveWeekly();
   renderWeekly();
-  // show saved badge
   const badge = document.getElementById('dl-saved-badge');
   badge.classList.add('show');
-  setTimeout(() => badge.classList.remove('show'), 2500);
+  setTimeout(()=>badge.classList.remove('show'), 2500);
 }
 
-function clearWeeklyLog() {
+async function clearWeeklyLog() {
   if (!confirm('Clear all weekly data?')) return;
   weeklyLog = {};
-  saveWeekly();
+  await saveWeekly();
   renderWeekly();
 }
 
-/* ── BAR COLOR ── */
+/* ══════════════════════════════════════════
+   RENDER WEEKLY
+══════════════════════════════════════════ */
 function barColor(pct) {
-  if (pct >= 80) return '#5abf8a';
-  if (pct >= 50) return '#9090f0';
-  if (pct >= 20) return '#4ab8d8';
+  if (pct>=80) return '#5abf8a';
+  if (pct>=50) return '#9090f0';
+  if (pct>=20) return '#4ab8d8';
   return '#2e2e50';
 }
 
-/* ── RENDER WEEKLY ── */
 function renderWeekly() {
   const weekKeys = getWeekKeys();
-  const today = new Date();
-  const todayDow = today.getDay();
-
-  // week label
-  const first = new Date(today); first.setDate(today.getDate() - todayDow);
-  const last  = new Date(today); last.setDate(today.getDate() - todayDow + 6);
+  const today = new Date(), todayDow = today.getDay();
+  const first = new Date(today); first.setDate(today.getDate()-todayDow);
+  const last  = new Date(today); last.setDate(today.getDate()-todayDow+6);
   document.getElementById('wt-week-label').textContent =
     MONTHS[first.getMonth()]+' '+first.getDate()+' – '+MONTHS[last.getMonth()]+' '+last.getDate()+', '+last.getFullYear();
 
   // bar chart
   const chart = document.getElementById('wt-chart');
-  chart.innerHTML = '';
+  chart.innerHTML='';
   const weekScores = weekKeys.map(k => weeklyLog[k] ? weeklyLog[k].overall : null);
-
-  weekKeys.forEach((k, i) => {
-    const pct = weekScores[i];
-    const isToday = i === todayDow;
-    const wrap = document.createElement('div');
-    wrap.className = 'wt-bar-wrap';
-    const pctLabel = document.createElement('div');
-    pctLabel.className = 'wt-bar-pct';
-    pctLabel.style.color = isToday ? '#e8e8ff' : 'var(--muted)';
-    pctLabel.textContent = pct !== null ? pct+'%' : '';
-    const outer = document.createElement('div');
-    outer.className = 'wt-bar-outer';
-    const inner = document.createElement('div');
-    inner.className = 'wt-bar-inner';
-    inner.style.height = (pct !== null ? pct : 0)+'%';
-    inner.style.background = pct !== null ? barColor(pct) : 'transparent';
-    if (isToday) { outer.style.border = '1px solid var(--c1l)'; outer.style.borderRadius = '6px'; }
+  weekKeys.forEach((k,i)=>{
+    const pct=weekScores[i], isToday=(i===todayDow);
+    const wrap=document.createElement('div'); wrap.className='wt-bar-wrap';
+    const pctLbl=document.createElement('div'); pctLbl.className='wt-bar-pct';
+    pctLbl.style.color=isToday?'#e8e8ff':'var(--muted)';
+    pctLbl.textContent=pct!==null?pct+'%':'';
+    const outer=document.createElement('div'); outer.className='wt-bar-outer';
+    const inner=document.createElement('div'); inner.className='wt-bar-inner';
+    inner.style.height=(pct!==null?pct:0)+'%';
+    inner.style.background=pct!==null?barColor(pct):'transparent';
+    if(isToday){outer.style.border='1px solid var(--c1l)';outer.style.borderRadius='6px';}
     outer.appendChild(inner);
-    const dayLabel = document.createElement('div');
-    dayLabel.className = 'wt-bar-day';
-    dayLabel.style.color = isToday ? 'var(--c1l)' : 'var(--muted)';
-    dayLabel.textContent = DAY_NAMES[i];
-    wrap.appendChild(pctLabel);
-    wrap.appendChild(outer);
-    wrap.appendChild(dayLabel);
+    const dayLbl=document.createElement('div'); dayLbl.className='wt-bar-day';
+    dayLbl.style.color=isToday?'var(--c1l)':'var(--muted)';
+    dayLbl.textContent=DAY_NAMES[i];
+    wrap.appendChild(pctLbl); wrap.appendChild(outer); wrap.appendChild(dayLbl);
     chart.appendChild(wrap);
   });
 
-  // snapshot stats
-  const logged = weekScores.filter(s => s !== null);
-  const avg = logged.length ? Math.round(logged.reduce((a,b)=>a+b,0)/logged.length) : null;
-  const best = logged.length ? Math.max(...logged) : null;
-  document.getElementById('wt-avg').textContent = avg !== null ? avg+'%' : '—';
-  document.getElementById('wt-best').textContent = best !== null ? best+'%' : '—';
-
-  // streak
-  let streak = 0;
-  for (let i = todayDow; i >= 0; i--) {
-    if (weekScores[i] !== null && weekScores[i] >= 50) streak++;
-    else break;
+  // stats
+  const logged=weekScores.filter(s=>s!==null);
+  const avg=logged.length?Math.round(logged.reduce((a,b)=>a+b,0)/logged.length):null;
+  const best=logged.length?Math.max(...logged):null;
+  document.getElementById('wt-avg').textContent=avg!==null?avg+'%':'—';
+  document.getElementById('wt-best').textContent=best!==null?best+'%':'—';
+  let streak=0;
+  for(let i=todayDow;i>=0;i--){
+    if(weekScores[i]!==null&&weekScores[i]>=50)streak++; else break;
   }
-  document.getElementById('wt-streak').textContent = streak > 0 ? streak+'🔥' : '0';
+  document.getElementById('wt-streak').textContent=streak>0?streak+'🔥':'0';
 
   // tab breakdown
-  const grid = document.getElementById('wt-tabs-grid');
-  grid.innerHTML = '';
-  const allTabDefs = [{id:'routine', name:'Routine', icon:'📋'}, ...customTabs.map(t=>({id:t.id,name:t.name,icon:t.icon}))];
-  allTabDefs.forEach(tab => {
-    const row = document.createElement('div');
-    row.className = 'wt-tab-row';
-    const lbl = document.createElement('div');
-    lbl.className = 'wt-tab-label';
-    lbl.textContent = tab.icon+' '+tab.name;
-    const barsWrap = document.createElement('div');
-    barsWrap.className = 'wt-tab-bars';
-    weekKeys.forEach((k, i) => {
-      const entry = weeklyLog[k];
-      const pct = entry && entry.tabs && entry.tabs[tab.id] != null ? entry.tabs[tab.id] : null;
-      const dot = document.createElement('div');
-      dot.className = 'wt-tab-dot';
-      dot.style.background = pct !== null ? barColor(pct) : 'var(--border)';
-      dot.style.color = pct !== null ? '#fff' : 'var(--muted)';
-      dot.textContent = pct !== null ? pct+'%' : (i === todayDow ? '·' : '');
-      if (i === todayDow) dot.style.outline = '1px solid var(--c1l)';
+  const grid=document.getElementById('wt-tabs-grid'); grid.innerHTML='';
+  const allTabDefs=[{id:'routine',name:'Routine',icon:'📋'},...customTabs.map(t=>({id:t.id,name:t.name,icon:t.icon}))];
+  allTabDefs.forEach(tab=>{
+    const row=document.createElement('div'); row.className='wt-tab-row';
+    const lbl=document.createElement('div'); lbl.className='wt-tab-label'; lbl.textContent=tab.icon+' '+tab.name;
+    const barsWrap=document.createElement('div'); barsWrap.className='wt-tab-bars';
+    weekKeys.forEach((k,i)=>{
+      const entry=weeklyLog[k];
+      const pct=entry&&entry.tabs&&entry.tabs[tab.id]!=null?entry.tabs[tab.id]:null;
+      const dot=document.createElement('div'); dot.className='wt-tab-dot';
+      dot.style.background=pct!==null?barColor(pct):'var(--border)';
+      dot.style.color=pct!==null?'#fff':'var(--muted)';
+      dot.textContent=pct!==null?pct+'%':(i===todayDow?'·':'');
+      if(i===todayDow) dot.style.outline='1px solid var(--c1l)';
       barsWrap.appendChild(dot);
     });
-    const pctNow = tab.id === 'routine' ? routineScore() : customScore(tab.id);
-    const pctEl = document.createElement('div');
-    pctEl.className = 'wt-tab-pct';
-    pctEl.textContent = pctNow+'%';
-    row.appendChild(lbl);
-    row.appendChild(barsWrap);
-    row.appendChild(pctEl);
+    const pctNow=tab.id==='routine'?routineScore():customScore(tab.id);
+    const pctEl=document.createElement('div'); pctEl.className='wt-tab-pct'; pctEl.textContent=pctNow+'%';
+    row.appendChild(lbl); row.appendChild(barsWrap); row.appendChild(pctEl);
     grid.appendChild(row);
   });
 
-  // restore today's mood & notes if already logged
-  const todayEntry = weeklyLog[todayKey()];
-  if (todayEntry) {
-    if (todayEntry.mood) selectMood(todayEntry.mood);
-    if (todayEntry.notes) document.getElementById('dl-notes').value = todayEntry.notes;
+  // restore today mood/notes
+  const todayEntry=weeklyLog[todayKey()];
+  if(todayEntry){
+    if(todayEntry.mood) selectMood(todayEntry.mood);
+    if(todayEntry.notes) document.getElementById('dl-notes').value=todayEntry.notes;
+  } else {
+    selectedMood=null;
+    document.querySelectorAll('.dl-mood-btn').forEach(b=>b.classList.remove('selected'));
+    document.getElementById('dl-notes').value='';
   }
 
-  // render log history (most recent first)
-  const histEl = document.getElementById('log-history');
-  histEl.innerHTML = '';
-  const sortedKeys = Object.keys(weeklyLog).sort((a,b)=>b.localeCompare(a));
-  if (sortedKeys.length === 0) {
-    histEl.innerHTML = '<div style="font-size:13px;color:var(--muted);text-align:center;padding:12px">No logs yet. Save today\'s progress to get started!</div>';
+  // log history
+  const histEl=document.getElementById('log-history'); histEl.innerHTML='';
+  const sortedKeys=Object.keys(weeklyLog).sort((a,b)=>b.localeCompare(a));
+  if(!sortedKeys.length){
+    histEl.innerHTML='<div style="font-size:13px;color:var(--muted);text-align:center;padding:12px">No logs yet. Save today\'s progress to get started!</div>';
   } else {
-    sortedKeys.slice(0, 14).forEach(k => {
-      const entry = weeklyLog[k];
-      const div = document.createElement('div');
-      div.className = 'log-entry';
-      const moodEmoji = entry.mood ? MOOD_EMOJI[entry.mood] : '📅';
-      const tabBarsHTML = allTabDefs.map(tab => {
-        const pct = entry.tabs && entry.tabs[tab.id] != null ? entry.tabs[tab.id] : 0;
+    sortedKeys.slice(0,14).forEach(k=>{
+      const entry=weeklyLog[k];
+      const div=document.createElement('div'); div.className='log-entry';
+      const moodEmoji=entry.mood?MOOD_EMOJI[entry.mood]:'📅';
+      const tabBarsHTML=allTabDefs.map(tab=>{
+        const pct=entry.tabs&&entry.tabs[tab.id]!=null?entry.tabs[tab.id]:0;
         return `<div class="log-mini-bar" style="background:${barColor(pct)};opacity:0.8" title="${tab.name}: ${pct}%"></div>`;
       }).join('');
-      div.innerHTML = `
+      div.innerHTML=`
         <div class="log-entry-top">
           <span class="log-entry-mood">${moodEmoji}</span>
           <span class="log-entry-date">${formatDateKey(k)}</span>
           <span class="log-entry-pct">${entry.overall}%</span>
         </div>
-        ${entry.notes ? `<div class="log-entry-note">${entry.notes}</div>` : ''}
-        <div class="log-entry-mini-bars">${tabBarsHTML}</div>
-      `;
+        ${entry.notes?`<div class="log-entry-note">${entry.notes}</div>`:''}
+        <div class="log-entry-mini-bars">${tabBarsHTML}</div>`;
       histEl.appendChild(div);
     });
   }
 }
 
-/* ── TAB SWITCHING (BUG FIX: single source of truth) ── */
+/* ══════════════════════════════════════════
+   CALORIE TRACKER
+══════════════════════════════════════════ */
+function renderCalories() {
+  const goal = calorieData.goal || DEFAULT_CALORIE_GOAL;
+  const key = todayKey();
+  const entries = (calorieData.log && calorieData.log[key]) || [];
+  const consumed = entries.reduce((sum,e)=>sum+(+e.cal||0),0);
+  const remaining = goal - consumed;
+  const pct = goal>0 ? Math.min(100, Math.round(consumed/goal*100)) : 0;
+
+  document.getElementById('cal-date-label').textContent = `${FULL_DAYS[new Date().getDay()]} · ${MONTHS[new Date().getMonth()]} ${new Date().getDate()}`;
+  document.getElementById('cal-bar').style.width = pct+'%';
+  document.getElementById('cal-bar').style.background = consumed>goal ? '#ff8080' : (pct>85 ? '#e0c040' : 'var(--c4)');
+  document.getElementById('cal-consumed').textContent = consumed;
+  document.getElementById('cal-remaining').textContent = Math.abs(remaining);
+  document.getElementById('cal-remaining-stat').classList.toggle('over', remaining<0);
+  document.getElementById('cal-goal-display').textContent = goal;
+  document.getElementById('cal-goal-input').placeholder = goal;
+  document.getElementById('cal-count').textContent = entries.length+' item'+(entries.length===1?'':'s');
+
+  const list = document.getElementById('cal-log-list');
+  list.innerHTML='';
+  if (!entries.length) {
+    list.innerHTML = '<div class="cal-empty">No food logged yet today. Add your first item below 👇</div>';
+    return;
+  }
+  entries.forEach(e=>{
+    const div=document.createElement('div');
+    div.className='cal-entry';
+    div.innerHTML=`
+      <span class="cal-entry-name">${e.name}</span>
+      <span class="cal-entry-kcal">${e.cal} kcal</span>
+      <span class="cal-entry-time">${e.time||''}</span>
+      <button class="delete-btn" title="Remove" style="opacity:1">✕</button>`;
+    div.querySelector('.delete-btn').addEventListener('click',()=>deleteCalorieEntry(e.id));
+    list.appendChild(div);
+  });
+}
+async function addCalorieEntry() {
+  const nameInput = document.getElementById('cal-food-input');
+  const kcalInput = document.getElementById('cal-kcal-input');
+  const name = nameInput.value.trim();
+  const cal = parseInt(kcalInput.value, 10);
+  if (!name || isNaN(cal) || cal < 0) return;
+  const key = todayKey();
+  if (!calorieData.log) calorieData.log = {};
+  if (!calorieData.log[key]) calorieData.log[key] = [];
+  const now = new Date();
+  const time = (now.getHours()%12||12)+':'+String(now.getMinutes()).padStart(2,'0')+(now.getHours()<12?'am':'pm');
+  calorieData.log[key].push({id:'cal'+(nextId++), name, cal, time});
+  nameInput.value=''; kcalInput.value='';
+  renderCalories();
+  await saveCalories();
+}
+async function deleteCalorieEntry(id) {
+  const key = todayKey();
+  if (!calorieData.log || !calorieData.log[key]) return;
+  calorieData.log[key] = calorieData.log[key].filter(e=>e.id!==id);
+  renderCalories();
+  await saveCalories();
+}
+async function saveCalorieGoal() {
+  const input = document.getElementById('cal-goal-input');
+  const val = parseInt(input.value, 10);
+  if (isNaN(val) || val <= 0) { input.value=''; return; }
+  calorieData.goal = val;
+  input.value='';
+  renderCalories();
+  await saveCalories();
+}
+async function resetCalorieDay() {
+  if (!confirm("Clear today's food log?")) return;
+  const key = todayKey();
+  if (calorieData.log) calorieData.log[key] = [];
+  renderCalories();
+  await saveCalories();
+}
+window.addCalorieEntry  = addCalorieEntry;
+window.saveCalorieGoal  = saveCalorieGoal;
+window.resetCalorieDay  = resetCalorieDay;
+document.getElementById('cal-food-input').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('cal-kcal-input').focus(); });
+document.getElementById('cal-kcal-input').addEventListener('keydown',e=>{ if(e.key==='Enter') addCalorieEntry(); });
+document.getElementById('cal-goal-input').addEventListener('keydown',e=>{ if(e.key==='Enter') saveCalorieGoal(); });
+
+/* ══════════════════════════════════════════
+   TAB SWITCHING
+══════════════════════════════════════════ */
 function switchTab(id) {
-  activeTab = id;
-  // Update all tab buttons
-  document.querySelectorAll('.tab-btn:not(.add-tab-btn)').forEach(b => {
-    b.classList.toggle('active', b.dataset.tab === id);
-  });
-  // Update all pages
-  document.querySelectorAll('.page').forEach(p => {
-    p.classList.toggle('active', p.id === 'page-'+id);
-  });
-  if (id === 'weekly') renderWeekly();
+  activeTab=id;
+  document.querySelectorAll('.tab-btn:not(.add-tab-btn)').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+id));
+  if(id==='weekly') renderWeekly();
+  if(id==='calories') renderCalories();
 }
 
-/* ── BUILD TAB NAV (BUG FIX: no longer sets active class here) ── */
 function buildTabNav() {
-  const nav = document.getElementById('tabNav');
-  const addBtn = document.getElementById('addTabBtn');
-  // Remove old custom buttons
-  nav.querySelectorAll('[data-custom]').forEach(b => b.remove());
-  customTabs.forEach(tab => {
-    const btn = document.createElement('button');
-    btn.className = 'tab-btn';
-    btn.dataset.tab = tab.id;
-    btn.dataset.custom = '1';
-    btn.textContent = tab.icon+' '+tab.name;
-    btn.addEventListener('click', () => switchTab(tab.id));
-    nav.insertBefore(btn, addBtn);
+  const nav=document.getElementById('tabNav'), addBtn=document.getElementById('addTabBtn');
+  nav.querySelectorAll('[data-custom]').forEach(b=>b.remove());
+  customTabs.forEach(tab=>{
+    const btn=document.createElement('button');
+    btn.className='tab-btn'; btn.dataset.tab=tab.id; btn.dataset.custom='1';
+    btn.textContent=tab.icon+' '+tab.name;
+    btn.addEventListener('click',()=>switchTab(tab.id));
+    nav.insertBefore(btn,addBtn);
   });
 }
 
-/* ── BUILD CUSTOM PAGES (BUG FIX: no active class set here) ── */
 function buildCustomPages() {
-  const container = document.getElementById('customPagesContainer');
-  container.innerHTML = '';
-  customTabs.forEach(tab => {
-    const page = document.createElement('div');
-    page.className = 'page';
-    page.id = 'page-'+tab.id;
-    page.dataset.custom = '1';
-    page.innerHTML = `
+  const container=document.getElementById('customPagesContainer'); container.innerHTML='';
+  customTabs.forEach(tab=>{
+    const page=document.createElement('div');
+    page.className='page'; page.id='page-'+tab.id; page.dataset.custom='1';
+    page.innerHTML=`
       <div class="custom-page-header">
         <div class="custom-page-title"><span class="tab-icon">${tab.icon}</span>${tab.name}</div>
         <div style="display:flex;gap:8px">
-          <button class="custom-reset-btn" onclick="resetCustomTab('${tab.id}')">↺ Reset</button>
-          <button class="delete-tab-btn" onclick="deleteCustomTab('${tab.id}')">✕ Delete tab</button>
+          <button class="custom-reset-btn" onclick="window._resetCustomTab('${tab.id}')">↺ Reset</button>
+          <button class="delete-tab-btn" onclick="window._deleteCustomTab('${tab.id}')">✕ Delete tab</button>
         </div>
       </div>
       <div class="custom-progress-row">
@@ -653,91 +1054,99 @@ function buildCustomPages() {
       </div>
       <div class="task-list" id="clist-${tab.id}"></div>
       <div class="add-row" style="margin-top:8px">
-        <input class="add-input" id="cinput-${tab.id}" placeholder="Add task..." />
-        <button class="add-btn" onclick="addCustomTask('${tab.id}')">+ Add</button>
-      </div>
-    `;
+        <input class="add-input" id="cinput-${tab.id}" placeholder="Add task…" />
+        <button class="add-btn" onclick="window._addCustomTask('${tab.id}')">+ Add</button>
+      </div>`;
     container.appendChild(page);
-    document.getElementById('cinput-'+tab.id).addEventListener('keydown', e => {
-      if (e.key === 'Enter') addCustomTask(tab.id);
+    document.getElementById('cinput-'+tab.id).addEventListener('keydown',e=>{
+      if(e.key==='Enter') addCustomTask(tab.id);
     });
   });
 }
 
 function renderCustomTab(tabId) {
-  const tab = customTabs.find(t=>t.id===tabId);
-  if (!tab) return;
-  const list = document.getElementById('clist-'+tabId);
-  if (!list) return;
-  list.innerHTML = '';
-  tab.tasks.forEach(task => {
-    const div = document.createElement('div');
-    div.className = 'task custom-task' + (task.done?' done':'');
-    div.innerHTML = `
+  const tab=customTabs.find(t=>t.id===tabId);
+  if(!tab) return;
+  const list=document.getElementById('clist-'+tabId);
+  if(!list) return;
+  list.innerHTML='';
+  tab.tasks.forEach(task=>{
+    if (task.header) {
+      const h=document.createElement('div');
+      h.className='task-group-header';
+      h.innerHTML=`<span class="tgh-text">${task.text}</span><span class="tgh-line"></span>`;
+      list.appendChild(h);
+      return;
+    }
+    const div=document.createElement('div');
+    div.className='task custom-task'+(task.done?' done':'');
+    div.innerHTML=`
       <div class="checkbox"><span class="check-icon">✓</span></div>
       <span class="task-text">${task.text}</span>
-      <button class="delete-btn" title="Remove">✕</button>
-    `;
-    div.querySelector('.checkbox').addEventListener('click', ()=>toggleCustom(tabId, task.id));
-    div.querySelector('.task-text').addEventListener('click', ()=>toggleCustom(tabId, task.id));
-    div.querySelector('.delete-btn').addEventListener('click', e=>{ e.stopPropagation(); deleteCustomTask2(tabId, task.id); });
+      <button class="delete-btn" title="Remove">✕</button>`;
+    div.querySelector('.checkbox').addEventListener('click',()=>toggleCustom(tabId,task.id));
+    div.querySelector('.task-text').addEventListener('click',()=>toggleCustom(tabId,task.id));
+    div.querySelector('.delete-btn').addEventListener('click',e=>{e.stopPropagation();deleteCustomTask2(tabId,task.id);});
     list.appendChild(div);
   });
-  const done = tab.tasks.filter(t=>t.done).length;
-  const pct = tab.tasks.length ? Math.round(done/tab.tasks.length*100) : 0;
-  document.getElementById('cbar-'+tabId).style.width = pct+'%';
-  document.getElementById('cpct-'+tabId).textContent = pct+'%';
+  const real=tab.tasks.filter(t=>!t.header);
+  const done=real.filter(t=>t.done).length;
+  const pct=real.length?Math.round(done/real.length*100):0;
+  document.getElementById('cbar-'+tabId).style.width=pct+'%';
+  document.getElementById('cpct-'+tabId).textContent=pct+'%';
 }
 
-function toggleCustom(tabId, taskId) {
-  const tab = customTabs.find(t=>t.id===tabId);
-  const task = tab && tab.tasks.find(t=>t.id===taskId);
-  if (task) { task.done=!task.done; saveCustom(); renderCustomTab(tabId); }
+/* ══════════════════════════════════════════
+   CUSTOM TAB ACTIONS
+══════════════════════════════════════════ */
+async function toggleCustom(tabId,taskId){
+  const tab=customTabs.find(t=>t.id===tabId), task=tab&&tab.tasks.find(t=>t.id===taskId);
+  if(task){task.done=!task.done; renderCustomTab(tabId); await saveCustom();}
 }
-function addCustomTask(tabId) {
-  const input = document.getElementById('cinput-'+tabId);
-  const text = input.value.trim();
-  if (!text) return;
-  const tab = customTabs.find(t=>t.id===tabId);
-  tab.tasks.push({id:'ct'+(nextId++), text, done:false});
-  input.value='';
-  saveCustom(); renderCustomTab(tabId);
+async function addCustomTask(tabId){
+  const input=document.getElementById('cinput-'+tabId), text=input.value.trim();
+  if(!text) return;
+  const tab=customTabs.find(t=>t.id===tabId);
+  tab.tasks.push({id:'ct'+(nextId++),text,done:false});
+  input.value=''; renderCustomTab(tabId); await saveCustom();
 }
-function deleteCustomTask2(tabId, taskId) {
-  const tab = customTabs.find(t=>t.id===tabId);
-  tab.tasks = tab.tasks.filter(t=>t.id!==taskId);
-  saveCustom(); renderCustomTab(tabId);
+async function deleteCustomTask2(tabId,taskId){
+  const tab=customTabs.find(t=>t.id===tabId);
+  tab.tasks=tab.tasks.filter(t=>t.id!==taskId);
+  renderCustomTab(tabId); await saveCustom();
 }
-function resetCustomTab(tabId) {
-  if (!confirm('Reset all tasks in this tab?')) return;
-  const tab = customTabs.find(t=>t.id===tabId);
+async function resetCustomTab(tabId){
+  if(!confirm('Reset all tasks in this tab?')) return;
+  const tab=customTabs.find(t=>t.id===tabId);
   tab.tasks.forEach(t=>t.done=false);
-  saveCustom(); renderCustomTab(tabId);
+  renderCustomTab(tabId); await saveCustom();
 }
-function deleteCustomTab(tabId) {
-  if (!confirm('Delete this tab and all its tasks?')) return;
-  customTabs = customTabs.filter(t=>t.id!==tabId);
-  saveCustom();
-  const nextActive = 'routine';
-  activeTab = nextActive;
-  rebuild();
-  switchTab(nextActive);
+async function deleteCustomTab(tabId){
+  if(!confirm('Delete this tab and all its tasks?')) return;
+  customTabs=customTabs.filter(t=>t.id!==tabId);
+  await saveCustom();
+  activeTab='routine'; rebuild(); switchTab('routine');
 }
 
-/* ── ROUTINE ── */
-function renderRoutine() {
-  ['morning','afternoon','evening'].forEach(sec => {
-    const list = document.getElementById('list-'+sec);
-    list.innerHTML='';
-    routineData[sec].forEach(task => {
-      const div = document.createElement('div');
+// Expose to inline onclick (module scope workaround)
+window._addCustomTask   = addCustomTask;
+window._resetCustomTab  = resetCustomTab;
+window._deleteCustomTab = deleteCustomTab;
+
+/* ══════════════════════════════════════════
+   ROUTINE ACTIONS
+══════════════════════════════════════════ */
+function renderRoutine(){
+  ['morning','afternoon','evening'].forEach(sec=>{
+    const list=document.getElementById('list-'+sec); list.innerHTML='';
+    routineData[sec].forEach(task=>{
+      const div=document.createElement('div');
       div.className='task'+(task.done?' done':'');
       div.innerHTML=`
         <div class="checkbox"><span class="check-icon">✓</span></div>
         <span class="task-icon">${task.icon}</span>
         <span class="task-text">${task.text}</span>
-        <button class="delete-btn" title="Remove">✕</button>
-      `;
+        <button class="delete-btn" title="Remove">✕</button>`;
       div.querySelector('.checkbox').addEventListener('click',()=>toggleRoutine(sec,task.id));
       div.querySelector('.task-text').addEventListener('click',()=>toggleRoutine(sec,task.id));
       div.querySelector('.task-icon').addEventListener('click',()=>toggleRoutine(sec,task.id));
@@ -748,32 +1157,35 @@ function renderRoutine() {
     document.getElementById('count-'+sec).textContent=done+'/'+routineData[sec].length;
   });
   const all=[...routineData.morning,...routineData.afternoon,...routineData.evening];
-  const done=all.filter(t=>t.done).length;
-  const pct=all.length?Math.round(done/all.length*100):0;
+  const done=all.filter(t=>t.done).length, pct=all.length?Math.round(done/all.length*100):0;
   document.getElementById('progressBar').style.width=pct+'%';
   document.getElementById('progressPct').textContent=pct+'%';
 }
-function toggleRoutine(sec,id){
+async function toggleRoutine(sec,id){
   const t=routineData[sec].find(t=>t.id===id);
-  if(t){t.done=!t.done;saveRoutine();renderRoutine();}
+  if(t){t.done=!t.done; renderRoutine(); await saveRoutine();}
 }
-function deleteRoutineTask(sec,id){
+async function deleteRoutineTask(sec,id){
   routineData[sec]=routineData[sec].filter(t=>t.id!==id);
-  saveRoutine();renderRoutine();
+  renderRoutine(); await saveRoutine();
 }
-function addRoutineTask(sec){
-  const input=document.getElementById('input-'+sec);
-  const text=input.value.trim();
-  if(!text)return;
+async function addRoutineTask(sec){
+  const input=document.getElementById('input-'+sec), text=input.value.trim();
+  if(!text) return;
   const icons={morning:'🌅',afternoon:'⚡',evening:'🌙'};
   routineData[sec].push({id:'r'+(nextId++),text,icon:icons[sec],done:false});
-  input.value='';saveRoutine();renderRoutine();
+  input.value=''; renderRoutine(); await saveRoutine();
 }
-function resetRoutine(){
-  if(!confirm('Reset all tasks for today?'))return;
+async function resetRoutine(){
+  if(!confirm('Reset all tasks for today?')) return;
   ['morning','afternoon','evening'].forEach(s=>routineData[s].forEach(t=>t.done=false));
-  saveRoutine();renderRoutine();
+  renderRoutine(); await saveRoutine();
 }
+window.resetRoutine    = resetRoutine;
+window.addRoutineTask  = addRoutineTask;
+window.saveLog         = saveLog;
+window.clearWeeklyLog  = clearWeeklyLog;
+window.selectMood      = selectMood;
 
 document.querySelectorAll('#page-routine .add-input').forEach(inp=>{
   inp.addEventListener('keydown',e=>{
@@ -781,18 +1193,20 @@ document.querySelectorAll('#page-routine .add-input').forEach(inp=>{
   });
 });
 
-/* ── MODAL ── */
+/* ══════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════ */
 function openModal(){
   document.getElementById('modalOverlay').classList.add('open');
   document.getElementById('modalName').value='';
   document.getElementById('modalName').focus();
-  selectedEmoji=EMOJIS[0];
-  buildEmojiGrid();
+  selectedEmoji=EMOJIS[0]; buildEmojiGrid();
 }
 function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
+window.closeModal=closeModal;
+
 function buildEmojiGrid(){
-  const grid=document.getElementById('emojiGrid');
-  grid.innerHTML='';
+  const grid=document.getElementById('emojiGrid'); grid.innerHTML='';
   EMOJIS.forEach(em=>{
     const btn=document.createElement('button');
     btn.className='emoji-opt'+(em===selectedEmoji?' selected':'');
@@ -801,38 +1215,44 @@ function buildEmojiGrid(){
     grid.appendChild(btn);
   });
 }
-function confirmNewTab(){
+async function confirmNewTab(){
   const name=document.getElementById('modalName').value.trim();
   if(!name){document.getElementById('modalName').focus();return;}
   const id='tab_'+(nextId++);
   customTabs.push({id,name,icon:selectedEmoji,tasks:[]});
-  saveCustom();
-  closeModal();
-  activeTab=id;
-  rebuild();
-  switchTab(id);
+  await saveCustom(); closeModal();
+  activeTab=id; rebuild(); switchTab(id);
 }
-document.getElementById('btn-routine').addEventListener('click', () => switchTab('routine'));
-document.getElementById('btn-weekly').addEventListener('click', () => switchTab('weekly'));
-document.getElementById('addTabBtn').addEventListener('click', openModal);
+window.confirmNewTab=confirmNewTab;
+
+document.getElementById('btn-routine').addEventListener('click',()=>switchTab('routine'));
+document.getElementById('btn-weekly').addEventListener('click',()=>switchTab('weekly'));
+document.getElementById('btn-calories').addEventListener('click',()=>switchTab('calories'));
+document.getElementById('addTabBtn').addEventListener('click',openModal);
 document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
 document.getElementById('modalName').addEventListener('keydown',e=>{if(e.key==='Enter')confirmNewTab();});
 
-/* ── REBUILD ALL ── */
+/* ══════════════════════════════════════════
+   REBUILD
+══════════════════════════════════════════ */
 function rebuild(){
-  buildTabNav();
-  buildCustomPages();
-  renderRoutine();
+  buildTabNav(); buildCustomPages(); renderRoutine();
   customTabs.forEach(t=>renderCustomTab(t.id));
 }
 
-/* ── INIT ── */
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
 const now=new Date();
 document.getElementById('dateLabel').textContent=`${FULL_DAYS[now.getDay()]} · ${MONTHS[now.getMonth()]} ${now.getDate()}`;
 
-loadAll();
+await loadAll();
+await migrateFitnessTab();
 rebuild();
-switchTab('routine'); // always start on routine, sets active class cleanly
+switchTab('routine');
+startRealtimeSync();
+
 </script>
-</body>
-</html>
+
+
+</body></html>
